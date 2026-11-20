@@ -10,7 +10,7 @@ Este documento es el registro canónico del encuadre, las aclaraciones y los pen
 
 | Fuente | Alcance y autoridad |
 |---|---|
-| [Manual_LSC5.md](Manual_LSC5.md) | Instrucciones locales suministradas por el usuario; conservar el original. El archivo real comienza con `Manual`, no `MANUAL`. |
+| `Manual_LSC5.md` (copia local excluida de GitHub) | Instrucciones locales suministradas por el usuario; conservar el original. El archivo real comienza con `Manual`, no `MANUAL`. |
 | [Página oficial: dataset, reglas y evaluación](https://www.latamiachallenge.com/dataset.php#reglas) | Reglas públicas y entregables. Consultada el 10 de noviembre mediante HTTP público con `curl`; el navegador de investigación no pudo abrirla. |
 | Aclaraciones del usuario del 10 y 19 de noviembre | Prioridades, fecha límite, composición, recursos y presupuesto. El 19 confirmó dos oportunidades de evaluación y que cuenta la última; feedback y ventanas desconocidos. Distinguirlas de reglas publicadas. |
 | [02_data_audit.json](02_data_audit_public.json) | Observaciones locales; alcance y limitaciones de cada comprobación. |
