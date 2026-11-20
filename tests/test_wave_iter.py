@@ -33,3 +33,22 @@ def test_iter2_bundle_refuses_test_paths(tmp_path):
     np.save(p, _clip())
     with pytest.raises(ValueError, match="reserved"):
         wave_iter.predict_bundle(tmp_path / "missing", [p])
+
+
+def test_rest_gate_removes_low_static_hand_but_keeps_moving_one():
+    c = _clip(t=30)                                   # right hand raised and jittering at shoulder height
+    pose, face, lh, rh = (b.copy() for b in wave.split_blocks(c))
+    lh[:, :, :2] = [0.6, 0.95]                       # left hand static far below the shoulders (lap/table)
+    lh[:, :, 2] = 0.01
+    c = wave.join_blocks(pose, face, lh, rh)
+    g = wave_iter.rest_gate(c, low=1.3)
+    assert not g[:, wave.LH].any()
+    assert np.array_equal(g[:, wave.RH] != 0, c[:, wave.RH] != 0)
+
+
+def test_iter3_bundle_refuses_test_paths(tmp_path):
+    p = tmp_path / "test" / "x.npy"
+    p.parent.mkdir()
+    np.save(p, _clip())
+    with pytest.raises(ValueError, match="reserved"):
+        wave_iter.predict_bundle_v3(tmp_path / "missing", [p])

@@ -212,3 +212,191 @@ def predict_bundle(bundle_dir, paths, allow_test=False):
             rows.append(np.mean([torch.softmax(m(torch.from_numpy(((f - mu) / sd).astype(np.float32))[None]), 1).numpy()[0]
                                  for m, mu, sd in models], 0))
     return np.stack(rows)
+
+
+# ---------------------------------------------------------------- iteration 3 options
+def peak_handshape(c, top=0.25):
+    """Right-hand (dominant after canonicalisation) shape averaged over the most elevated wrist frames."""
+    pose, _, _, rh = wave.split_blocks(c)
+    present = (rh != 0).any((1, 2))
+    if not present.any():
+        return np.zeros(42 + 9, np.float32)
+    elev = -pose[:, 16, 1]
+    idx = np.where(present)[0]
+    k = max(1, int(round(top * len(idx))))
+    sel = idx[np.argsort(elev[idx])[-k:]]
+    xy = rh[sel, :, :2]
+    span = np.linalg.norm(xy[:, 9] - xy[:, 0], axis=1)
+    span = np.where(span > 1e-4, span, 1.0)
+    local = ((xy - xy[:, :1]) / span[:, None, None]).mean(0).ravel()
+    tips = [4, 8, 12, 16, 20]
+    d_wrist = np.stack([np.linalg.norm(xy[:, t] - xy[:, 0], axis=1) for t in tips], 1) / span[:, None]
+    d_thumb = np.stack([np.linalg.norm(xy[:, t] - xy[:, 4], axis=1) for t in tips[1:]], 1) / span[:, None]
+    return np.concatenate([local, d_wrist.mean(0), d_thumb.mean(0)]).astype(np.float32)
+
+
+def jitter_segment(c, rng, max_shift=4):
+    seg = wave.active_segment(c)
+    a = int(np.clip(seg.start + rng.integers(-max_shift, max_shift + 1), 0, len(c) - 8))
+    b = int(np.clip(seg.stop + rng.integers(-max_shift, max_shift + 1), a + 8, len(c)))
+    return c[a:b]
+
+
+def features(c, cfg, rng=None, augment=False):
+    """Configurable iteration-3 feature builder; augment applies the configured train-only transforms."""
+    if cfg.get("gate"):
+        c = rest_gate(c, low=cfg["gate"])
+    if augment and "view" in cfg.get("aug", ()):
+        c = view_augment(c, rng)
+    if cfg.get("active"):
+        c = jitter_segment(c, rng, cfg.get("jitter", 0)) if (augment and cfg.get("jitter")) else c[wave.active_segment(c)]
+    s = sequence(c, handshape=cfg.get("shape", False))
+    parts = [s]
+    if cfg.get("vel"):
+        parts.append(velocity_features(s))
+    out = wave.masked_stats(np.concatenate(parts, 1))
+    if cfg.get("peak"):
+        out = np.concatenate([out, peak_handshape(c)])
+    return out
+
+
+def fit_mlp_cfg(x, y, signers, seed, hidden=128, dropout=0.3, epochs=80, wd=1e-3):
+    """Same optimisation as wave.fit_mlp with configurable width/dropout/weight decay."""
+    import torch
+    from torch import nn
+    wave._seed(seed)
+    x = np.stack(x)
+    mean, std = x.mean(0), x.std(0)
+    std[std < 1e-6] = 1
+    xt = torch.from_numpy(((x - mean) / std).astype(np.float32))
+    yt = torch.from_numpy(y)
+    model = nn.Sequential(nn.Linear(x.shape[1], hidden), nn.ReLU(), nn.Dropout(dropout), nn.Linear(hidden, 5))
+    opt = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=wd)
+    loss_fn = nn.CrossEntropyLoss()
+    for epoch in range(epochs):
+        for g in opt.param_groups:
+            g["lr"] = wave.learning_rate(epoch)
+        model.train()
+        for batch in wave.balanced_batches(y, signers, seed, epoch):
+            idx = torch.from_numpy(batch.copy())
+            opt.zero_grad(set_to_none=True)
+            loss_fn(model(xt[idx]), yt[idx]).backward()
+            opt.step()
+    model.eval()
+
+    def predict(v):
+        with torch.inference_mode():
+            v = np.stack(v)
+            return torch.softmax(model(torch.from_numpy(((v - mean) / std).astype(np.float32))), 1).numpy()
+    predict.state = {"kind": "mlp_cfg", "dim": x.shape[1], "hidden": hidden, "dropout": dropout,
+                     "mean": mean, "std": std, "model": model}
+    return predict
+
+
+def rest_gate(c, low=1.3, slow=0.03):
+    """Zero a hand on frames where it rests: wrist lower than `low` shoulder widths below the shoulder midpoint
+    and moving less than `slow` shoulder widths/frame (±2-frame mean). Deterministic, per clip, label-free."""
+    pose, face, lh, rh = (b.copy() for b in wave.split_blocks(c))
+    width = np.linalg.norm(pose[:, 11, :2] - pose[:, 12, :2], axis=1)
+    ok = width > 1e-3
+    scale = np.median(width[ok]) if ok.any() else 1.0
+    mid_y = np.median(((pose[:, 11, 1] + pose[:, 12, 1]) / 2)[ok]) if ok.any() else 0.5
+    for hand in (lh, rh):
+        present = (hand != 0).any((1, 2))
+        if not present.any():
+            continue
+        wy = (hand[:, 0, 1] - mid_y) / scale
+        w = hand[:, 0, :2] / scale
+        step = np.zeros(len(hand))
+        both = present[1:] & present[:-1]
+        step[1:] = np.where(both, np.linalg.norm(w[1:] - w[:-1], axis=1), np.inf)
+        speed = np.convolve(np.where(np.isfinite(step), step, 1.0), np.ones(5) / 5, mode="same")
+        rest = present & (wy > low) & (speed < slow)
+        hand[rest] = 0.0
+    return wave.join_blocks(pose, face, lh, rh)
+
+
+# ---------------------------------------------------------------- iteration-3 configurable bundle
+BUNDLE_V3 = "lsc5_iter3_bundle_v1"
+CANDIDATE_V3 = dict(shape=True, vel=True, active=True, aug=["view"], n_aug=4, gate=1.3)
+
+
+def finalfit_v3(train_root, manifest, out, cfg=None, seeds=wave.SEEDS):
+    import json
+    from pathlib import Path
+    import torch
+    from .io import sha256
+    cfg = dict(CANDIDATE_V3 if cfg is None else cfg)
+    ids, xs, y, signers = wave.load_train(train_root, manifest)
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=False, mode=0o700)
+    faces = []
+    for s, x in zip(manifest["samples"], xs):
+        if s["view"] == "V01":
+            f = x[:, wave.FACE].reshape(len(x), 468, 3)
+            ok = (f != 0).any((1, 2))
+            if ok.any():
+                faces.append(np.median(f[ok], 0))
+    face_perm = wave.face_permutation(faces)
+    np.save(out / "face_perm.npy", face_perm)
+    canon = [wave.canonical(x, face_perm) for x in xs]
+    rng = np.random.default_rng(AUG_SEED)
+    n = cfg.get("n_aug", 0)
+    feats = [features(c, cfg) for c in canon]
+    extra = [[features(c, cfg, rng, augment=True) for _ in range(n)] for c in canon]
+    fx = feats + [extra[i][k] for k in range(n) for i in range(len(canon))]
+    fy, fs = np.tile(y, n + 1), np.tile(signers, n + 1)
+    members, ref = [], []
+    for seed in seeds:
+        p = fit_mlp_cfg(fx, fy, fs, seed, hidden=cfg.get("hidden", 128), dropout=cfg.get("dropout", 0.3),
+                        wd=cfg.get("wd", 1e-3))
+        name = f"mlp_s{seed}"
+        torch.save(p.state["model"].state_dict(), out / f"{name}.pt")
+        np.savez_compressed(out / f"{name}_norm.npz", mean=p.state["mean"], std=p.state["std"])
+        members.append({"name": name, "seed": seed, "dim": int(p.state["dim"]), "hidden": cfg.get("hidden", 128),
+                        "dropout": cfg.get("dropout", 0.3), "model_sha256": sha256(out / f"{name}.pt"),
+                        "norm_sha256": sha256(out / f"{name}_norm.npz")})
+        ref.append(p(feats))
+    np.savez_compressed(out / "train_reference.npz", ids=np.asarray(ids), probabilities=np.mean(ref, 0))
+    bundle = {"revision": BUNDLE_V3, "classes": wave.CLASSES, "cfg": cfg, "members": members,
+              "combination": "mean of MLP seeds", "aug_rng": AUG_SEED,
+              "face_perm_sha256": sha256(out / "face_perm.npy"), "fit_clips": len(ids),
+              "manifest_hash": manifest["manifest_hash"],
+              "versions": {"numpy": np.__version__, "torch": str(torch.__version__)}}
+    (out / "bundle.json").write_text(json.dumps(bundle, indent=2))
+    return bundle
+
+
+def predict_bundle_v3(bundle_dir, paths, allow_test=False):
+    import json
+    from pathlib import Path
+    import torch
+    from torch import nn
+    from .data import read_sequence
+    from .io import sha256
+    if not allow_test and any("test" in Path(p).resolve().parts for p in paths):
+        raise ValueError("Test payloads are reserved for an authorised frozen run")
+    wave.configure_cpu()
+    bundle_dir = Path(bundle_dir)
+    bundle = json.loads((bundle_dir / "bundle.json").read_text())
+    if bundle.get("revision") != BUNDLE_V3 or bundle.get("classes") != wave.CLASSES:
+        raise ValueError("Unsupported bundle")
+    if sha256(bundle_dir / "face_perm.npy") != bundle["face_perm_sha256"]:
+        raise ValueError("Bundle file hash mismatch")
+    face_perm, cfg = np.load(bundle_dir / "face_perm.npy"), bundle["cfg"]
+    models = []
+    for m in bundle["members"]:
+        if sha256(bundle_dir / f"{m['name']}.pt") != m["model_sha256"] or sha256(bundle_dir / f"{m['name']}_norm.npz") != m["norm_sha256"]:
+            raise ValueError("Bundle file hash mismatch")
+        model = nn.Sequential(nn.Linear(m["dim"], m["hidden"]), nn.ReLU(), nn.Dropout(m["dropout"]), nn.Linear(m["hidden"], 5))
+        model.load_state_dict(torch.load(bundle_dir / f"{m['name']}.pt", weights_only=True))
+        model.eval()
+        with np.load(bundle_dir / f"{m['name']}_norm.npz", allow_pickle=False) as z:
+            models.append((model, z["mean"], z["std"]))
+    rows = []
+    with torch.inference_mode():
+        for path in paths:
+            f = features(wave.canonical(np.asarray(read_sequence(path)), face_perm), cfg)
+            rows.append(np.mean([torch.softmax(m(torch.from_numpy(((f - mu) / sd).astype(np.float32))[None]), 1).numpy()[0]
+                                 for m, mu, sd in models], 0))
+    return np.stack(rows)
