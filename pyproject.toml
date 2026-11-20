@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lsc5"
+version = "0.1.0"
+description = "Offline, training-only LSC5 CPU pilot"
+requires-python = ">=3.10,<3.11"
+dependencies = ["numpy==1.26.4", "torch==2.4.1"]
+
+[project.optional-dependencies]
+dev = ["pytest==8.3.5"]
+
+[project.scripts]
+lsc5 = "lsc5.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
