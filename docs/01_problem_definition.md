@@ -47,7 +47,7 @@ Accuracy top-1 es la métrica oficial, confirmada por la página y por el usuari
 
 Si se evalúan los 375 IDs distribuidos, un acierto adicional equivale a `1/375`, aproximadamente 0,267 puntos porcentuales. No existe un umbral conocido que garantice ganar. El manual menciona macro-F1 y accuracy como ejemplos; la página concreta la métrica principal. No se ha adoptado otra métrica como objetivo del ranking.
 
-La página permite desempatar por tiempo de envío o criterio secundario, sin fijar cuál. La noticia institucional menciona innovación/calidad técnica, pero no proporciona una rúbrica vinculante. No se infiere una ponderación adicional a la métrica oficial.
+La página permite desempatar por tiempo de envío o criterio secundario, sin fijar cuál. La reconsulta pública por HTTP del20nov2026 (código200) reafirmó ese texto, los entregables (pesos+código, reporte corto, CSV; carga `.ipynb` o `.csv`) y la «2ª jornada · 19–25 nov» en el servidor UNAB. No publica la hora ni el canal de cierre. La noticia institucional menciona innovación/calidad técnica, pero no proporciona una rúbrica vinculante. No se infiere una ponderación adicional a la métrica oficial.
 
 | Hito o entrega | Estado / fuente |
 |---|---|

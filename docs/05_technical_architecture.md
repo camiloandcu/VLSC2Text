@@ -176,6 +176,8 @@ El incremento de línea base añade `fit-baseline` con los mismos argumentos de 
 
 La CLI también ofrece `budget-init/reserve/bind/settle`, `pilot` y `predict-train`, con argumentos en su `--help`. El piloto exige reserva previa vinculada a Slurm; el lanzador es `scripts/cronos_pilot.sbatch`. Presentar el job retenido, vincular su ID en el ledger y liberar solo ese job. Reservar900s tras verificar que cubren TimeLimit600s+KillWait; después de estado terminal, liquidar con ElapsedRaw del job, una sola vez. No ejecutar estos pasos para reservar/entrenar de nuevo sin un ítem autorizado. La predicción restaurada usa `--data-root`, `--manifest`, `--run` y `--out` y reconstruye R0 desde NPY train originales.
 
+Implementado el20nov (`delivery.py`): `delivery-loso --seed {17,29,43}`, `finalfit-baseline --seeds ...` y `validate-submission`. `predict_bundle`/`write_submission` existen como funciones de biblioteca y rechazan rutas test, salvo una habilitación explícita futura. El bundle es `r0_mlp_bundle_v1`: pesos `state_dict`, escaladores `.npz`, `bundle.json` con hashes y promedio de probabilidades. Evidencia en07 §13.
+
 Las interfaces siguientes son **propuestas para incrementos posteriores**; no son comandos disponibles en este incremento:
 
 ```text

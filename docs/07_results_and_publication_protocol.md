@@ -228,3 +228,69 @@ El diagnóstico temporal adverso y la reconciliación documental posterior al la
 Corrección acotada en curso: reparar persistencia durante limpieza; se mantiene la reserva retenida y se descartó el nuevo contrato contable por innecesario. No repetirGPU para ocultar el fallo ni retaggear productor/caché. La reserva sigue protegiendo el presupuesto. Nuevas recetas y evaluaciones oficiales conservan su decisión propia.
 
 Corrección posterior verificada:32pruebasCPU87,77s, cinco focales3,88s y dos escenarios independientesCPU conformes. Snapshot posterior separado del ejecutado, con cambios únicamente en supervisor y prueba. Límites: errores de cierre dellock/restauración de señales posteriores a persistencia pueden no quedar grabados; si `worker_termination_confirmed:false`, la pared del supervisor no acredita duración total del trabajador y no basta para liquidación medida automática. No se recuperó la medición histórica ni se ejecutó otro intento.
+
+
+**Diagnósticos de recuperación, 20nov2026 (solo lectura, sin entrenamiento ni test).** Se aplicó a los1125 IDs alineados, con la verdad train, la pareja 50/50 fijada en04 §6. Con las probabilidades E08 provisionales, E01+E08 obtiene712/1125 (63,29%), +26 aciertos frente a E01. Por persona da +19 en M02, −12 en M03 y +19 en M04. No es promovible porque M03 pierde más de un acierto. La pareja definida mientras no haya RGB elegible, E01+E02O sobre OOF aceptados, obtiene690/1125 (61,33%), +4 frente a E01, con −5 en M02, +29 en M03 y −20 en M04. Tampoco es promovible. E11 sigue cerrado: E08 está222 aciertos por debajo del líder y el máximo es12.
+
+**Consecuencia.** Aceptar E08 mediante una restauración nueva no cambiaría la selección bajo la regla vigente, y E01 sigue como finalista único. Los872 embeddings del staging de la restauración fallida son legibles e idénticos bit a bit al caché; es una equivalencia parcial de extracción, no de probabilidades, y no sustituye V4 ni crea OOF aceptado. La cifra712 depende de E08 provisional y no se presenta como resultado aceptado. Siguiente ítem propuesto: [camino de entrega E01](../openspec/changes/archive/2026-11-20-e01-delivery-path/proposal.md).
+
+
+## 13. Diagnósticos X1–X3/X7 y camino de entrega E01 · 20nov2026
+
+Todo con train y CPU/GPU local, sin test ni gasto. Artefactos privados en `artifacts/diagnostics` y `artifacts/e01-delivery`.
+
+**X1 · layout acreditado empíricamente.** Ejecuté MediaPipe Holistic 0.10.14 (complejidad1, confianzas0,5, modo video) sobre los30 clips de la selección piloto. En los30 coincide el número de frames con el NPY. Comparación por bloque en los frames con detección en ambos:
+
+| Bloque | Frames | Correlación mín/mediana | Error XY mediano |
+|---|---:|---|---:|
+| Pose 33×4 | 1804 | 0,9912 / 0,9991 | 0,0071 |
+| Cara 468×3 | 1783 | 0,99985 / 1,0000 | 0,00013 |
+| Mano izquierda 21×3 | 607 | 0,9937 / 0,9998 | 0,00031 |
+| Mano derecha 21×3 | 890 | 0,9979 / 0,9997 | 0,00050 |
+
+Las hipótesis alternativas no coinciden: con las manos intercambiadas el error es0,10, y con la pose en espejo 0,041. La concordancia de bloques de mano en cero es97,5–97,6%, así que las ausencias son no-detecciones genuinas de MediaPipe. Unidades: fracciones de imagen. La pose 15/16 corresponde a las muñecas izquierda y derecha de la persona, verificado visualmente en X3. La convención izquierda/derecha de los bloques de mano se verificará en X8.
+
+Con esto se cumple el criterio preregistrado y R1/ROI quedan desbloqueadas. También queda abierta la opción de reextraer landmarks propios, por ejemplo con mayor complejidad o recortes, aplicando a test la misma transformación fija por muestra.
+
+**X3 · lateralidad.** En las hojas de contacto, M02 hace sign_01 con la mano izquierda en las tres vistas, mientras M03 y M04 usan la derecha. Lo cuantifiqué con la elevación máxima de la muñeca (pose15/16) respecto del reposo final, normalizada por la anchura de hombros:
+
+- **M02 usa la mano izquierda** en72–75 de75 clips de cada clase.
+- M03 y M04 son diestros en casi todas las clases. Excepciones: M03 sign_02 18/75 izquierda; M04 sign_04 35/40, probablemente bimanual.
+
+Explicación compatible con los datos: el fold M02 (43,73%) entrena con dos personas diestras y evalúa a una zurda. Es una hipótesis fuerte, todavía no probada causalmente; se pondrá a prueba en X8.
+
+**X7 · vistas.** V01 es frontal; V02 y V03 son tomas laterales de lados opuestos. No son tomas simultáneas:
+
+- solo el4,3% de los pares por índice tiene el mismo T;
+- la correlación de energía de movimiento es −0,02, igual que entre clips cualesquiera;
+- los rangos de T difieren por vista.
+
+Además, la ropa cambia entre vistas en M02 y M04. Conclusión: cada persona×clase×vista es un bloque de25 ejecuciones grabado en su propia sesión.
+
+**X2 · atajo de sesión.** Clasifiqué solo con estadísticas de color de franjas de borde del primer frame, sin persona (regresión logística):
+
+- **dentro de cada persona separa las cinco clases al99,5–100%**;
+- entre personas (LOSO) acierta376/1125 (33,4%; M02170, M03 81, M04 125; azar 20%).
+
+Es decir, cada sesión de clase tiene firma de fondo y luz propia, y esa firma se transfiere solo parcialmente. Riesgos: los modelos sobre el frame completo y las coordenadas absolutas (encuadre por sesión) pueden aprender la sesión. Este canal no se usa como feature; motiva normalizar respecto al cuerpo y centrarse en las manos.
+
+**E13 · semillas de E01.** Reimplementé la receta en `delivery.py`. Con semilla17 reproduce E01 **bit a bit**: diferencia0 y 686/1125. Resultados por semilla (aciertos M02/M03/M04):
+
+| Semilla | Total | Accuracy | M02/M03/M04 |
+|---|---:|---:|---|
+| 17 (E01) | 686 | 60,98% | 164/280/242 |
+| 29 | 674 | 59,91% | 168/278/228 |
+| 43 | 677 | 60,18% | 181/278/218 |
+| **Promedio 17/29/43** | **676** | **60,09%** | 171/278/227 |
+
+Los nueve modelos se restauraron desde NPY originales en proceso nuevo con diferencia0. El primer intento mostró diferencias de hasta1,6e-6, causadas por un número distinto de hilos en la predicción; se corrigió fijando cuatro hilos y se conservan ambos registros. La semilla17 estaba en el extremo alto. Por la regla de04 §6, la receta vale676 (60,09%) y el campeón honesto ronda el60%. M04 varía24 aciertos entre semillas, lo que da la escala del ruido.
+
+**E14 · bundle.** `bundle_e01_s17_29_43` contiene el refit sobre los1125 clips con3 semillas, cada una con su escalador, combinadas por promedio de probabilidades. Comprobaciones:
+
+- La predicción en proceso nuevo desde NPY coincide exactamente (diferencia0) con la del refit.
+- Es invariante al orden. Por muestra individual la diferencia es1,1e-9.
+- CPU: 0,27s para375 clips y RSS pico de unos276MiB.
+
+`validate-submission` y `write_submission` están probados con plantillas sintéticas; **no se generó CSV de test**. El bundle queda listo como respaldo entregable; freeze, inferencia test y envío siguen sin autorizar.
+
+**Consecuencia.** El cuello de botella principal identificado es la lateralidad más la dependencia de sesión y encuadre, no la capacidad del modelo. Próximos ítems propuestos en04 §18.

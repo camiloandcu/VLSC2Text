@@ -1,6 +1,6 @@
 # LatAm IA Challenge · Índice del proyecto
 
-Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
+Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada; layout NPY acreditado; bundle E01 de3 semillas listo; siguiente ola X8/X4/X6 propuesta**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
 
 ## Etapas y autorización vigente
 
@@ -96,7 +96,14 @@ Revisión independiente del incidente: V1/V2 verificados, V3sin medición final/
 
 **Procedencia imprescindible.** Fuente ejecutada y42archivos: `artifacts/rgb-loso/source_snapshot_manifest.json`, productor `ab5046c5eaf9b896747597a140f2b54540544024070189ab84fcf3d018bb8518`. Arreglo posterior: `post_failure_source_snapshot_manifest.json`, productor `d8a9c1f4f3d420abffcb9d025973e32d62d6df0e83a7674e3054dbbbd89fb798`. No retaggear cachés/modelos; los consumidores actuales exigen productor exacto. Caché completo en `artifacts/rgb-loso/extract_execution/full/cache`; cabezas en `remote_heads/runs`, fallo en `restore_failure_administrative.json` y trazas privadas del mismo directorio. Ledger autoritativo remoto `~/resultados/lsc5/budget.json`; copia de cierre `artifacts/rgb-loso/remote_final/budget.json`,5147,780808451s medidos+18060comprometidos, reserva final43200,caja0. Baseline en `artifacts/cpu-baseline/oof`; ancla del reporte `0c66634dad513803a80c3edfa180f05264c1230ec77e30081327a5c5dcd0c248`.
 
-**Continuación propuesta.** Una restauración nueva puede completar la verificación sin reentrenar, pero requiere diagnóstico acotado, compatibilidad explícita entre fuente ejecutada/arreglo, presupuesto y autorización de intento nuevo; no repetir el secuenciador original ni liquidar la reserva perdida como medida. El fallo decleanup está corregido, el disparador inicial sigue desconocido y el reintento no garantiza éxito ni mejora deaccuracy. Prioridad científica: E01 sigue60,98%; E02O48,89%; E08solo41,24% provisional. Evaluar valor de repetir la verificación frente a la siguiente alternativa de04, sin inferir que una GPU más avanzada resolverá el rendimiento. R1/ROI bloqueadas por esquema anatómico; E11 requiere sus umbrales. USD10sin gastar; dos evaluaciones intactas, cuenta la última. Cierre25novBogotá/hora desconocida; fechas y acceso deben revalidarse si la sesión ocurre después.
+**Recuperación y propuesta vigente, 20nov2026.** Estado real verificado:
+
+- Ledger remoto con el mismo SHA que la copia de cierre, cero jobs y caja USD0.
+- Productor actual igual al snapshot posterior, con 32/32 pruebas, sin procesos RGB y la GTX1650 libre.
+
+La pareja 50/50 predefinida no se promueve ni con E08 provisional (M03 −12) ni con E02O (M04 −20), y E11 está cerrado. Por eso repetir la restauración RGB no cambia la selección bajo la regla vigente. Cifras en07 §12 y decisión en04 §16. El staging fallido coincide bit a bit con el caché en872 clips, solo como diagnóstico.
+
+Siguiente incremento propuesto: [camino de entrega E01](../openspec/changes/archive/2026-11-20-e01-delivery-path/proposal.md), con AC D1–D7 y admisión en06 §14. Cubre E13 (semillas 29/43), refit E14, bundle, predictor y validador del CSV, todo solo con train. No está autorizado: requiere aprobación humana. La opción B de04 §16 (enmendar la regla de la pareja para E01+E08) es una decisión humana separada y post hoc. No existe todavía ningún camino de entrega; freeze, test y evaluaciones requieren un alcance propio. R1/ROI siguen bloqueadas. USD10 sin gastar; dos evaluaciones intactas.
 
 **Acceso local privado.** Datos, entornos, artefactos y textos completos no viajan con GitHub. Otra sesión en esta misma máquina conserva esos recursos. SSH usa `~/.config/latamiachallenge/cronos.env` y hostkey fijada; consultar08 y helpers privados sin imprimir secretos. No relanzar `rgb_loso_sequence.py`: agotó su intento y no es un mecanismo de recuperación. Si se trabaja desde otra máquina, detener ejecución hasta obtener los recursos privados por un canal acordado; el repositorio público por sí solo no reproduce los resultados medidos.
 
@@ -105,3 +112,17 @@ Revisión independiente del incidente: V1/V2 verificados, V3sin medición final/
 Publicación: auditoría detallada `docs/02_data_audit.json` y manual `docs/Manual_LSC5.md` permanecen locales, respaldados y excluidos del historial público con autorización explícita. El resumen público agregado es `02_data_audit_public.json`; no sustituye el original privado como evidencia detallada. GitHub recibirá solo ramas saneadas; el bundle de reversión es privado y nunca se publica.
 
 Publicación efectiva: [PR1](https://github.com/camiloandcu/VLSC2Text/pull/1) fusionado el20nov2026 a las19:49:39UTC, verificado enGitHub. Código, documentación y continuidad en [main](https://github.com/camiloandcu/VLSC2Text/tree/main). Revisión independiente de publicación conforme:99blobs de las ramas saneadas,91archivos/41Markdown/136enlaces contra árbolGit, sin exclusiones privadas presentes. Referencias privadas de reversión no se subieron. La siguiente sesión debe continuar desde `main`. No hubo nuevo intentoML.
+
+**Objetivo y ola de diagnóstico, 20nov2026.** El usuario fijó como objetivo acercarse al80% y flexibilizó el protocolo interno (04 §17); las reglas del reto no cambian. Se propone la [ola de diagnóstico X1–X7](../openspec/changes/accuracy-diagnostics/proposal.md), con train solamente. X1 (verificación empírica de que las 1662 columnas son la serialización Holistic estándar) va primero porque condiciona normalización corporal, secuencia y recortes de mano. Cada ítem requiere aprobación de ejecución. El camino de entrega E01 sigue propuesto en paralelo como respaldo.
+
+**Ejecución aprobada, 20nov2026 («Apruebo»): X1/X2/X3/X7 y camino de entrega E01 completados en local.** Resultados en07 §13 y decisiones en04 §18.
+
+- **Layout NPY acreditado** frente a MediaPipe Holistic propio, por lo que R1/ROI quedan desbloqueadas.
+- **M02 es zurda en las cinco clases** y M03/M04 diestros.
+- **Cada sesión de clase tiene firma de fondo propia**: 99,5% dentro de persona y 33% entre personas.
+- **Las vistas son sesiones distintas**, no tomas simultáneas.
+- **E01 con semillas17/29/43**: promedio676/1125 (60,09%), restauraciones con diferencia0.
+- **Bundle con3 semillas** verificado sobre train. No hay freeze, CSV test ni envío.
+
+Ledger de Cronos sin cambios; ejecución local. Siguiente acción: aprobar X8 (lateralidad canónica), X4 y X6. Ítem de entrega archivado; [ola de diagnóstico](../openspec/changes/accuracy-diagnostics/proposal.md) activa.
+

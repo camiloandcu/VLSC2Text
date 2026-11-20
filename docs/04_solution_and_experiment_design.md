@@ -295,3 +295,49 @@ Comprobación de solo lectura del20 nov: GTX1650 con4096MiB y3935MiB libres al c
 ## 15. Alcance aprobado E07 global/E08
 
 El usuario aprobó el siguiente alcance tras el reintento conforme: caché global1125 y `rgb_pyramid_mlp_v2`, tresLOSO750/375,80épocas/semilla17. Conserva R4/optimización/umbrales existentes, ROI bloqueada y sin E09/E12/E13/refit/test. El piloto CPU de2épocas debe completar gate de costo/restauración antes de tres fits; la extracción tiene presupuesto de cadena conservador previo, no se presenta como medición de cabeza. [Ítem/AC V1–V6](../openspec/changes/archive/2026-11-20-rgb-global-loso/proposal.md); contratos05 §16 y límites06 §13. Se admite optimizar transporte de frames solo con equivalencia de píxeles verificada y sin cambiar representación. No abrir otra receta si los resultados no mejoran.
+
+
+## 16. Decisión E12 en recuperación y opción pendiente
+
+El20nov se aplicó la regla de pareja de§6 sin modificarla; las cifras están en07 §12. Ninguna pareja se promueve y E11 permanece cerrado, de modo que el finalista único es E01. La confirmación E13 (semillas29/43) y el refit E14 se proponen en el [ítem de entrega](../openspec/changes/archive/2026-11-20-e01-delivery-path/proposal.md).
+
+**Opción B, pendiente de decisión humana y no recomendada por defecto.** E01+E08 gana en dos de tres personas (+19/+19) y pierde12 en M03: +2,3 puntos porcentuales OOF de media. Es la única señal de mejora observada sobre60,98%, pero la regla que lo impide fue fijada antes de ver los datos. Relajarla ahora sería un cambio posterior a observar el resultado y sesgaría la estimación. Si el usuario lo decide explícitamente, se exigiría además:
+
+1. Una restauración RGB nueva con contrato de compatibilidad entre los modelos del productor ejecutado y el supervisor corregido.
+2. Un camino de inferencia DINOv2 para375 videos test dentro del bundle.
+3. Las semillas comunes de ambas recetas, o solo la semilla17.
+4. Terminar antes del corte del22nov18:00.
+
+Sin esa decisión, la regla vigente se conserva.
+
+
+## 17. Flexibilización del protocolo interno y objetivo80%
+
+**Decisión del usuario, 20nov2026:** priorizar el acercamiento al80% LOSO sobre la rigidez del protocolo interno.
+
+**Qué pasa a ser orientativo.** Las reglas internas de promoción y pareja de§6, los cortes del22 y del23 de06 §5, el principio de una hipótesis por rama y el bloqueo documental de R1. Cada desviación se registra con su motivo y se marca como posterior a observar el resultado cuando lo sea, porque afecta la interpretación del OOF.
+
+**Qué no cambia.** Las reglas del reto y la integridad de evaluación de01:
+
+- Test se usa solo para inferencia de un modelo fijado.
+- No hay ajuste con feedback de test.
+- No se usan etiquetas, nombres de archivo ni metadatos como features.
+- Se respetan las reglas del servidor.
+- Se usa LOSO con estado aprendido fit-only.
+
+**Criterio práctico de promoción.** Ganancia OOF ≥3 aciertos frente al campeón y media por persona positiva. Las regresiones por persona siempre se reportan y se consideran en la decisión. La opción B de§16 (E01+E08) queda admisible como candidata. Diagnósticos y candidatas propuestos en el [ítem de diagnóstico](../openspec/changes/accuracy-diagnostics/proposal.md).
+
+
+## 18. Consecuencias de X1–X3/X7 y siguiente ola
+
+Resultados en07 §13. R1 queda acreditada empíricamente, así que se reactivan R1/R2/R3, la TCN y ROI con las unidades y la lateralidad verificadas. Ítems propuestos, en orden de valor esperado:
+
+| Ítem | Hipótesis y cambio | Criterio |
+|---|---|---|
+| **X8 · lateralidad canónica** | Por clip, sin etiqueta, se detecta la mano activa (elevación de muñeca). Si es la izquierda, se aplica espejo `x→1−x` con intercambio de bloques izquierda/derecha y de los puntos pares de pose. Es una transformación determinista por muestra, válida también en inferencia. Se combina con espejo aleatorio como aumento en entrenamiento. Se aplica primero sobre R0/MLP, cambiando solo esto. | Ganancia OOF y por persona frente al promedio de semillas (676), con especial atención a M02. |
+| **X4 · normalización corporal** | Coordenadas centradas en el punto medio de hombros y escaladas por su anchura; manos relativas a la muñeca (R1/R2 de§4). Elimina encuadre y posición por sesión. | Igual. |
+| **X6 · secuencia** | `compact_tcn_v2` sobre R1/R2 canónicas con recorte del segmento activo y aumentos de escala/rotación/velocidad. | Igual; candidata. |
+| **X5 · RGB de manos** | DINOv2 sobre recortes de mano desde1080p, guiados por landmarks acreditados. | ≥10 puntos sobre el global en un subconjunto. |
+| **X9 · reextracción de landmarks** | MediaPipe con complejidad2 o sobre recortes de mitad superior a mayor resolución, para reducir el37% de frames sin manos. Se mide primero la tasa de detección en los30 clips de X1. | Menos frames sin manos y ganancia OOF. |
+
+Cada ítem compara también con la mejor variante anterior; se usa la promoción flexibilizada de§17.
