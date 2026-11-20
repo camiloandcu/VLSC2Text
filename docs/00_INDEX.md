@@ -1,6 +1,6 @@
 # LatAm IA Challenge · Índice del proyecto
 
-Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Repositorio Git local inicializado; publicación en GitHub autorizada y en preparación. Los endpoints locales citados en cierres anteriores describen su estado histórico.
+Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación publicados en GitHub en rama de revisión; PR abierto, sin fusionar. Los endpoints locales citados en cierres anteriores describen su estado histórico.
 
 ## Etapas y autorización vigente
 
@@ -103,3 +103,5 @@ Revisión independiente del incidente: V1/V2 verificados, V3sin medición final/
 **Publicación solicitada.** Usuario solicitó publicar en `camiloandcu/VLSC2Text` con commits pequeños por cambios reales, conservando autoría/fechas y exclusiones privadas. Preparación y verificación autorizadas; método terminalGit/CLI consultado antes de usar la cuenta. No confundir publicación del código con autorización para reintentarGPU, gastar o enviar predicciones oficiales. Usuario autorizó después crear o pushear `main`; se preparará base mínima enmain y PR de la rama `feat/lsc5-project`. Estado de publicación se actualizará tras operación real.
 
 Publicación: auditoría detallada `docs/02_data_audit.json` y manual `docs/Manual_LSC5.md` permanecen locales, respaldados y excluidos del historial público con autorización explícita. El resumen público agregado es `02_data_audit_public.json`; no sustituye el original privado como evidencia detallada. GitHub recibirá solo ramas saneadas; el bundle de reversión es privado y nunca se publica.
+
+Publicación efectiva: base mínima `main` y rama `feat/lsc5-project` subidas a `camiloandcu/VLSC2Text`; [PR1](https://github.com/camiloandcu/VLSC2Text/pull/1) abierto para revisión, sinmerge. Revisión independiente de publicación conforme:99blobs de las dos ramas saneadas,91archivos/41Markdown/136enlaces contra árbolGit, sin exclusiones privadas presentes. Referencias privadas de reversión no se subieron. La siguiente sesión debe continuar desde la rama delPR, no asumir que main contiene todavía todo el proyecto. No hubo nuevo intentoML.
