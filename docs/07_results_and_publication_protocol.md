@@ -352,3 +352,58 @@ El recorte de mano cumple el criterio de ≥10 puntos sobre el global, pero sigu
 - Productor del snapshot `8c6e2acfbf647ea52894b9d6c1190fbfbcac1d2cec4d583e54a4c590a0d8463f` (53 archivos). Después del refit solo cambiaron la guarda de rutas test (ahora antes de cargar el bundle) y la CLI; `finalfit` es idéntico.
 - 48/48 pruebas, incluida una prueba de extremo a extremo sintética.
 - La inferencia test (`wave-predict-csv`) exige `--authorized-test-run` y **no se ha ejecutado**.
+
+
+## 15. Iteración2 · 97,42% LOSO (95,64% anidado) · 20nov2026
+
+**Punto de partida:** X4+X6 con 1056 aciertos. Sus69 errores se concentran en tres bloques de sesión:
+
+| Bloque | Errores (de 25) | Causa observada |
+|---|---:|---|
+| M04-sign_05-V02 | 22 | Sentado, con variante de pulgar arriba |
+| M03-sign_02-V02 | 15 | Círculo con los brazos extendidos |
+| M04-sign_04-V03 | 18 | Sentado, manos sobre una mesa |
+
+La escala por anchura de hombros es estable entre vistas (0,19–0,22) y la z de pose no es fiable, así que se descartó la escala como causa.
+
+**Variantes MLP probadas** (promedio de semillas17/29/43, LOSO750/375, todas sobre lateralidad canónica):
+
+| Variante | Aciertos | Accuracy | M02/M03/M04 |
+|---|---:|---:|---|
+| `mlp_base` | 1041 | 92.53% | 363/352/326 |
+| `mlp_rel` | 1026 | 91.20% | 361/343/322 |
+| `mlp_shape` | 1049 | 93.24% | 366/354/329 |
+| `mlp_relshape` | 1030 | 91.56% | 363/339/328 |
+| `mlp_active` | 1048 | 93.16% | 362/359/327 |
+| `mlp_viewaug4` | 1055 | 93.78% | 371/356/328 |
+| `mlp_viewtimeaug4` | 1050 | 93.33% | 371/353/326 |
+| `mlp_shape_active_viewaug4` | 1063 | 94.49% | 373/358/332 |
+| `mlp_shape_viewaug4` | 1058 | 94.04% | 373/356/329 |
+| `mlp_vel` | 1074 | 95.47% | 373/354/347 |
+| `mlp_rest` | 1064 | 94.58% | 371/347/346 |
+| `mlp_present` | 1047 | 93.07% | 358/354/335 |
+| `mlp_velshape` | 1073 | 95.38% | 373/353/347 |
+| `mlp_vel_viewaug4` | 1071 | 95.20% | 374/353/344 |
+| `mlp_velshape_viewaug4` | 1069 | 95.02% | 373/355/341 |
+| `mlp_velshape_active_viewaug4` | 1096 | 97.42% | 373/373/350 |
+
+Ganador: **`mlp_velshape_active_viewaug4`, 1096/1125 (97,42%)**: M02 373, M03 373, M04 350; por semilla 1094/1097/1088. Ingredientes:
+
+- velocidades de los49 puntos globales;
+- 18 distancias de forma de mano invariantes a rotación y escala;
+- estadísticas sobre el segmento activo;
+- 4 copias por clip con aumento de vista (escorzo horizontal 0,7–1, rotación ±8°, zoom ±15%), solo en ajuste.
+
+La TCN con estos mismos rasgos y una copia aumentada da1055, y la pareja con el MLP 1080: no se incluye. Las variantes con relaciones mano–mano/cara empeoran.
+
+**Estimación honesta del procedimiento de selección.** LOSO anidado sobre las14 variantes registradas: para cada persona externa se elige la variante solo con las otras dos (entrenar en una y validar en la otra, semilla17). Resultado: **1076/1125 = 95,64%**, frente a 97,42% del mejor a posteriori, lo que da un optimismo de unos1,8 puntos. Variantes elegidas: M02 y M04 eligieron la ganadora; M03 eligió `mlp_vel_viewaug4` (353).
+
+**Bundle `bundle_iter2_v1`.**
+
+- Refit sobre1125 clips + 4 copias aumentadas, 3 semillas, 82s.
+- Restauración en proceso nuevo: diferencia5e-11, invariante al orden, 0,013s por clip en CPU.
+- SHA de `bundle.json`: `92a0aee2b7b7696cf52b5556e5fcdf966bd2e7b8d4ae6e489246c48afa523887`.
+- 51/51 pruebas.
+- CLI `wave-predict-csv --bundle-kind iter2`, que exige `--authorized-test-run`; **test no se ha leído**.
+
+**Límites.** Selección repetida sobre tres personas; los errores restantes son bloques de sesión (sentado, variantes de seña). El test es una persona no vista con condiciones desconocidas.

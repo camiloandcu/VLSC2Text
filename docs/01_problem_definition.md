@@ -51,7 +51,7 @@ La página permite desempatar por tiempo de envío o criterio secundario, sin fi
 
 | Hito o entrega | Estado / fuente |
 |---|---|
-| Fecha límite | **25 de noviembre de 2026**, America/Bogota; corrección explícita del usuario durante la etapa 3. Sustituye el 21 comunicado inicialmente. Hora exacta pendiente; no asumir 23:59. |
+| Fecha límite | **27 de noviembre de 2026**, America/Bogota, según la actualización del usuario del 20nov2026. Sustituye el 25 y el 21 comunicados antes. Hora exacta pendiente; no asumir 23:59. |
 | Servidor | Ventana pública originalmente 11–18 de noviembre; conexión SSH comprobada el 19. Fecha efectiva de retiro pendiente. Inventario en [08](08_compute_operations.md). |
 | CSV de predicciones | Exigido por manual y página. |
 | Pesos y código de entrenamiento/inferencia | Exigidos por página. |

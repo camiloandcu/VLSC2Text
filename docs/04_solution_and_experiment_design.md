@@ -350,3 +350,17 @@ Resultados en07 §14. **Candidato:** X4+X6 al 50/50 sobre landmarks normalizados
 RGB de manos (X5) y una tercera receta quedan aplazados: su valor esperado es bajo frente al riesgo de calendario. Mejoras posibles si se reabre exploración antes del freeze: separar sign_02, sign_04 y sign_05 (rasgos de movimiento o forma local) y añadir RGB de manos con extracción completa.
 
 **Siguiente paso operativo:** freeze de `bundle_x4x6_v1`, inferencia test autorizada, validación del CSV y evaluación1 según la política de§12. Requiere autorización explícita.
+
+
+## 20. Candidato tras la iteración2 y siguiente objetivo
+
+**Candidato:** `bundle_iter2_v1` (MLP, 3 semillas), 97,42% LOSO a posteriori y 95,64% en LOSO anidado (07 §15). Sustituye a X4+X6 (93,87%), que queda como respaldo junto con E01.
+
+**Siguiente objetivo**, medido en LOSO anidado para no premiar la selección: ≥96,5% (≥1086).
+
+Hipótesis para la iteración3, ordenadas por valor esperado:
+
+1. Robustez a postura sentada: aumentos que desplacen la altura de reposo de las manos y recorten los extremos del clip.
+2. Variantes de seña: forma de mano de los frames de máxima elevación (pulgar arriba frente a palma abierta).
+3. Más copias aumentadas o semillas: reducen varianza.
+4. Ensemble con RGB de manos (X5) completo, si queda tiempo de GPU.

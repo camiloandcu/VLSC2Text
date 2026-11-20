@@ -1,6 +1,6 @@
 # LatAm IA Challenge · Índice del proyecto
 
-Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada; ola X4/X6/X8 completada: 93,87% LOSO de desarrollo (E01 60,09%); bundle final verificado; inferencia test y envío pendientes de autorización**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
+Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada; iteración2 completada: 97,42% LOSO (95,64% anidado); bundle iter2 verificado; cierre movido al 27nov; iteración3 en curso hacia ≥96,5% anidado**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
 
 ## Etapas y autorización vigente
 
@@ -134,4 +134,12 @@ Ledger de Cronos sin cambios; ejecución local. Siguiente acción: aprobar X8 (l
 - Bundle `bundle_x4x6_v1` verificado en proceso nuevo.
 
 **Siguiente acción: autorizar freeze, inferencia test y evaluación1.** Pendiente también una revisión independiente. Commit y push directo a `main` autorizados por el usuario el20nov.
+
+**Iteración por objetivos, 20nov2026.** El usuario pidió mejorar iterativamente con objetivos realistas y movió el cierre al **27nov** (01 §3). También indicó no priorizar el envío temprano por desempate.
+
+- Iteración2: velocidades + forma de mano + segmento activo + aumento de vista.
+- Resultado: **1096/1125 (97,42%)** a posteriori y **95,64% en LOSO anidado**, la estimación honesta.
+- Bundle `bundle_iter2_v1` verificado.
+
+Detalle en07 §15, decisión en04 §20 y plan en06 §15. Siguiente objetivo: ≥96,5% anidado. Freeze, inferencia test y envío siguen requiriendo autorización.
 

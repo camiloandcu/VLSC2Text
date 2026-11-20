@@ -224,3 +224,16 @@ Ruta de entrega lista:
 4. Carga de la evaluación1 por el integrante designado.
 
 Los pasos 2 a 4 requieren autorización humana. El primer envío conviene hacerlo pronto (posible desempate por tiempo y latencia desconocida); la segunda evaluación se reserva para recuperación técnica.
+
+
+## 15. Iteración por objetivos (desde el20nov)
+
+**Cierre actualizado por el usuario: 27nov2026, Bogotá; hora pendiente.** Prioridad: maximizar accuracy para ganar, no adelantar el envío por un posible desempate por tiempo. La exploración puede continuar mientras quede margen para freeze, inferencia (unos10s en CPU), validación y carga. La segunda evaluación sigue reservada para recuperación técnica.
+
+**Reto iterativo**, sobre la base X4+X6 de 1056/1125 (93,87%):
+
+- **Objetivo1:** ≥1080 (96%) sin regresión por persona.
+- **Objetivo2:** ≥1097 (97,5%).
+
+Al superar un objetivo se fija el siguiente. Cada iteración registra sus variantes en `artifacts/iter2/log.json`. Al cerrar, una evaluación LOSO anidada estima el sesgo de selección del procedimiento completo. Resultados en07 §15.
+
