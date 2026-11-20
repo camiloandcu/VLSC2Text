@@ -1,0 +1,41 @@
+# Local datasets and reference papers are not public repository assets.
+/data/
+/docs/literature/
+
+# Model artifacts and potentially sensitive per-sample outputs.
+/artifacts/
+/runs/
+/outputs/
+/checkpoints/
+/weights/
+/logs/
+/cache/
+/.cache/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.pkl
+*.pickle
+*.npy
+*.npz
+*.mp4
+
+# Local environments, credentials and generated tool state.
+/.venv/
+/.venv-rgb/
+.env
+.env.*
+!.env.example
+credentials*.json
+service-account*.json
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.pytest_cache/
+.coverage
+htmlcov/
+
+docs/private
