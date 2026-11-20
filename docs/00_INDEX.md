@@ -1,6 +1,6 @@
 # LatAm IA Challenge · Índice del proyecto
 
-Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Entrega local; no existe repositorio Git inicializado.
+Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Repositorio Git local inicializado; publicación en GitHub autorizada y en preparación. Los endpoints locales citados en cierres anteriores describen su estado histórico.
 
 ## Etapas y autorización vigente
 
@@ -100,4 +100,4 @@ Revisión independiente del incidente: V1/V2 verificados, V3sin medición final/
 
 **Acceso local privado.** Datos, entornos, artefactos y textos completos no viajan con GitHub. Otra sesión en esta misma máquina conserva esos recursos. SSH usa `~/.config/latamiachallenge/cronos.env` y hostkey fijada; consultar08 y helpers privados sin imprimir secretos. No relanzar `rgb_loso_sequence.py`: agotó su intento y no es un mecanismo de recuperación. Si se trabaja desde otra máquina, detener ejecución hasta obtener los recursos privados por un canal acordado; el repositorio público por sí solo no reproduce los resultados medidos.
 
-**Publicación solicitada.** Usuario solicitó publicar en `camiloandcu/VLSC2Text` con commits pequeños por cambios reales, conservando autoría/fechas y exclusiones privadas. Preparación y verificación autorizadas; método terminalGit/CLI consultado antes de usar la cuenta. No confundir publicación del código con autorización para reintentarGPU, gastar o enviar predicciones oficiales. Estado de publicación se actualizará aquí tras operación real.
+**Publicación solicitada.** Usuario solicitó publicar en `camiloandcu/VLSC2Text` con commits pequeños por cambios reales, conservando autoría/fechas y exclusiones privadas. Preparación y verificación autorizadas; método terminalGit/CLI consultado antes de usar la cuenta. No confundir publicación del código con autorización para reintentarGPU, gastar o enviar predicciones oficiales. Usuario autorizó después crear o pushear `main`; se preparará base mínima enmain y PR de la rama `feat/lsc5-project`. Estado de publicación se actualizará tras operación real.
