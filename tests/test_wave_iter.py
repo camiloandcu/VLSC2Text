@@ -52,3 +52,15 @@ def test_iter3_bundle_refuses_test_paths(tmp_path):
     np.save(p, _clip())
     with pytest.raises(ValueError, match="reserved"):
         wave_iter.predict_bundle_v3(tmp_path / "missing", [p])
+
+
+def test_contact_and_bimanual_features_are_finite_and_label_free():
+    for left in (False, True):
+        c = _clip(t=30, left=left)
+        f = wave_iter.features(c, wave_iter.CANDIDATE_V4)
+        assert np.isfinite(f).all()
+        assert f.shape[0] == wave_iter.features(c, wave_iter.CANDIDATE_V3).shape[0] + 4 + 6
+    empty = _clip(t=30)
+    empty[:, wave.LH] = 0
+    b = wave_iter.bimanual_features(empty)
+    assert b[0] == 0 and b[1] == 0 and np.isfinite(b).all()

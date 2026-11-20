@@ -257,6 +257,10 @@ def features(c, cfg, rng=None, augment=False):
     out = wave.masked_stats(np.concatenate(parts, 1))
     if cfg.get("peak"):
         out = np.concatenate([out, peak_handshape(c)])
+    if cfg.get("contact"):
+        out = np.concatenate([out, contact_features(c)])
+    if cfg.get("bimanual"):
+        out = np.concatenate([out, bimanual_features(c)])
     return out
 
 
@@ -319,6 +323,8 @@ def rest_gate(c, low=1.3, slow=0.03):
 # ---------------------------------------------------------------- iteration-3 configurable bundle
 BUNDLE_V3 = "lsc5_iter3_bundle_v1"
 CANDIDATE_V3 = dict(shape=True, vel=True, active=True, aug=["view"], n_aug=4, gate=1.3)
+CANDIDATE_V4 = dict(CANDIDATE_V3, contact=True, bimanual=True)
+CANDIDATES = {"v3_gate13": CANDIDATE_V3, "v4_contact_bimanual": CANDIDATE_V4}
 
 
 def finalfit_v3(train_root, manifest, out, cfg=None, seeds=wave.SEEDS):
@@ -400,3 +406,39 @@ def predict_bundle_v3(bundle_dir, paths, allow_test=False):
             rows.append(np.mean([torch.softmax(m(torch.from_numpy(((f - mu) / sd).astype(np.float32))[None]), 1).numpy()[0]
                                  for m, mu, sd in models], 0))
     return np.stack(rows)
+
+
+# ---------------------------------------------------------------- iteration 4: sign_04 vs sign_05 cues
+def contact_features(c):
+    """Dominant (right after canonicalisation) hand closeness to the chest and when it happens."""
+    pose, _, _, rh = wave.split_blocks(c)
+    width = np.linalg.norm(pose[:, 11, :2] - pose[:, 12, :2], axis=1)
+    ok = width > 1e-3
+    scale = np.median(width[ok]) if ok.any() else 1.0
+    chest = (pose[:, 11, :2] + pose[:, 12, :2]) / 2 + np.array([0.0, 0.4]) * scale
+    present = (rh != 0).any((1, 2))
+    pts = np.where(present[:, None], rh[:, :, :2].mean(1), pose[:, 16, :2])
+    d = np.linalg.norm(pts - chest, axis=1) / scale
+    t = np.linspace(0, 1, len(d))
+    k = int(np.argmin(d))
+    return np.array([d.min(), t[k], d[-max(1, len(d) // 5):].mean() - d.min(), (d < 0.6).mean()], np.float32)
+
+
+def bimanual_features(c):
+    """Non-dominant hand activity after the rest gate: presence, motion energy and vertical co-movement."""
+    pose, _, lh, rh = wave.split_blocks(c)
+    width = np.linalg.norm(pose[:, 11, :2] - pose[:, 12, :2], axis=1)
+    ok = width > 1e-3
+    scale = np.median(width[ok]) if ok.any() else 1.0
+    out = []
+    ys = []
+    for hand in (lh, rh):
+        present = (hand != 0).any((1, 2))
+        w = hand[:, 0, :2] / scale
+        both = present[1:] & present[:-1]
+        energy = float(np.linalg.norm(w[1:] - w[:-1], axis=1)[both].sum()) if both.any() else 0.0
+        out += [present.mean(), energy]
+        ys.append(np.where(present, w[:, 1], np.nan))
+    both = ~np.isnan(ys[0]) & ~np.isnan(ys[1])
+    corr = float(np.corrcoef(ys[0][both], ys[1][both])[0, 1]) if both.sum() > 3 and ys[0][both].std() > 1e-6 and ys[1][both].std() > 1e-6 else 0.0
+    return np.array(out + [corr, both.mean()], np.float32)

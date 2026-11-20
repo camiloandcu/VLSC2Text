@@ -149,6 +149,7 @@ def main(argv=None):
     item.add_argument("--manifest", type=Path, required=True)
     item.add_argument("--out", type=Path, required=True)
     item = commands.add_parser("iter3-finalfit")
+    item.add_argument("--candidate", choices=["v3_gate13", "v4_contact_bimanual"], default="v4_contact_bimanual")
     item.add_argument("--data-root", type=Path, required=True)
     item.add_argument("--manifest", type=Path, required=True)
     item.add_argument("--out", type=Path, required=True)
@@ -169,7 +170,8 @@ def main(argv=None):
     if args.command in {"wave-finalfit", "wave-predict-csv", "iter2-finalfit", "iter3-finalfit"}:
         from . import delivery, wave, wave_iter
         if args.command == "iter3-finalfit":
-            result = wave_iter.finalfit_v3(args.data_root, read_json(args.manifest), args.out)
+            result = wave_iter.finalfit_v3(args.data_root, read_json(args.manifest), args.out,
+                                           cfg=wave_iter.CANDIDATES[args.candidate])
         elif args.command == "iter2-finalfit":
             result = wave_iter.finalfit(args.data_root, read_json(args.manifest), args.out)
         elif args.command == "wave-finalfit":
