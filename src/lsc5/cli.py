@@ -130,8 +130,35 @@ def main(argv=None):
             item.add_argument("--pilot", action="store_true")
         else:
             item.add_argument("--run", type=Path, required=True)
+    item = commands.add_parser("delivery-loso")
+    item.add_argument("--data-root", type=Path, required=True)
+    item.add_argument("--manifest", type=Path, required=True)
+    item.add_argument("--splits", type=Path, required=True)
+    item.add_argument("--seed", type=int, required=True)
+    item.add_argument("--out", type=Path, required=True)
+    item = commands.add_parser("finalfit-baseline")
+    item.add_argument("--data-root", type=Path, required=True)
+    item.add_argument("--manifest", type=Path, required=True)
+    item.add_argument("--seeds", type=int, nargs="+", required=True)
+    item.add_argument("--out", type=Path, required=True)
+    item = commands.add_parser("validate-submission")
+    item.add_argument("--template", type=Path, required=True)
+    item.add_argument("--submission", type=Path, required=True)
     args = parser.parse_args(argv)
     result = {"command": args.command}
+    if args.command in {"delivery-loso", "finalfit-baseline", "validate-submission"}:
+        from . import delivery
+        if args.command == "validate-submission":
+            result = delivery.validate_submission(args.template, args.submission)
+        else:
+            manifest = read_json(args.manifest)
+            data_root = args.data_root / "train" if args.data_root.name != "train" else args.data_root
+            if args.command == "delivery-loso":
+                result = delivery.loso(data_root, manifest, args.splits, delivery.check_seed(args.seed), args.out)
+            else:
+                result = delivery.finalfit(data_root, manifest, args.seeds, args.out)
+        print(json.dumps(result, indent=2, allow_nan=False))
+        return
     if args.command == "audit-train":
         manifest = build_manifest(args.data_root / "train", expected_count=1125)
         if args.out.exists():
