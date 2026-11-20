@@ -364,3 +364,12 @@ Hipótesis para la iteración3, ordenadas por valor esperado:
 2. Variantes de seña: forma de mano de los frames de máxima elevación (pulgar arriba frente a palma abierta).
 3. Más copias aumentadas o semillas: reducen varianza.
 4. Ensemble con RGB de manos (X5) completo, si queda tiempo de GPU.
+
+
+## 21. Candidato tras la iteración3 y criterio de parada
+
+**Candidato:** `bundle_iter3_v1` (`v3_gate13`), elegido por la regla de puntuación interna. Cifras: 98,13% LOSO a posteriori y 96,30% anidado (07 §16). Respaldos: iter2 (97,42%), X4+X6 (93,87%) y E01.
+
+**Criterio de parada de variantes.** Las variantes de clasificador ya se estancaron (1089–1106). Seguir añadiendo variantes sin una hipótesis nueva sobre bloques concretos solo infla la selección; el estimado anidado se mueve con los empates, no con mejoras reales. Cada nueva iteración debe partir de un diagnóstico de bloque como el de la compuerta.
+
+Errores residuales: M03-sign_02-V02 (brazos extendidos) y M04-sign_05-V02 (variante de pulgar arriba).

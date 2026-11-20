@@ -1,6 +1,6 @@
 # LatAm IA Challenge · Índice del proyecto
 
-Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada; iteración2 completada: 97,42% LOSO (95,64% anidado); bundle iter2 verificado; cierre movido al 27nov; iteración3 en curso hacia ≥96,5% anidado**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
+Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada; iteración3 completada: candidato v3_gate13 con 98,13% LOSO (96,30% anidado); bundle iter3 verificado; cierre 27nov**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
 
 ## Etapas y autorización vigente
 
@@ -142,4 +142,8 @@ Ledger de Cronos sin cambios; ejecución local. Siguiente acción: aprobar X8 (l
 - Bundle `bundle_iter2_v1` verificado.
 
 Detalle en07 §15, decisión en04 §20 y plan en06 §15. Siguiente objetivo: ≥96,5% anidado. Freeze, inferencia test y envío siguen requiriendo autorización.
+
+**Iteración3, 20nov2026 («Apruebo la iteración 3»).** Una compuerta de reposo label-free elimina la mano no dominante cuando descansa baja y quieta (regazo o mesa). Con ella, el candidato `v3_gate13`, elegido por regla de puntuación interna, llega a **1104/1125 (98,13%)**. El LOSO anidado con empates promediados da **96,30%**: el objetivo ≥96,5% quedó a ~3 aciertos.
+
+Detalle en07 §16 y decisión/criterio de parada en04 §21. Freeze, inferencia test y envío requieren autorización.
 

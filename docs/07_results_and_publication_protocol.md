@@ -407,3 +407,38 @@ La TCN con estos mismos rasgos y una copia aumentada da1055, y la pareja con el 
 - CLI `wave-predict-csv --bundle-kind iter2`, que exige `--authorized-test-run`; **test no se ha leído**.
 
 **Límites.** Selección repetida sobre tres personas; los errores restantes son bloques de sesión (sentado, variantes de seña). El test es una persona no vista con condiciones desconocidas.
+
+
+## 16. Iteración3 · compuerta de reposo, 98,13% LOSO (96,30% anidado) · 20nov2026
+
+**Objetivo declarado:** ≥96,5% en LOSO anidado. **No alcanzado por poco: 96,30%.**
+
+Cada variante se evaluó con LOSO externo (semillas17/29/43) y con una puntuación interna (entrenar en una persona y validar en otra, semilla17) para la selección anidada. `v3_base` reproduce exactamente la iteración2: 1096 aciertos y puntuaciones internas idénticas.
+
+| Variante | Aciertos | Accuracy | M02/M03/M04 | Interna sumada |
+|---|---:|---:|---|---:|
+| `v3_base` | 1096 | 97.42% | 373/373/350 | 2058 |
+| `v3_jitter4` | 1097 | 97.51% | 374/371/352 | 2063 |
+| `v3_peak` | 1090 | 96.89% | 373/369/348 | 2070 |
+| `v3_wide` | 1093 | 97.16% | 373/369/351 | 2059 |
+| `v3_wd` | 1096 | 97.42% | 373/373/350 | 2059 |
+| `v3_gate13` | 1104 | 98.13% | 373/366/365 | 2093 |
+| `v3_gate16` | 1106 | 98.31% | 373/368/365 | 2087 |
+
+**Diagnóstico que motivó la compuerta.** En M04-sign_05-V02 la mano no dominante aparece en el98% de los frames, en reposo sobre el regazo (1,89 anchos de hombro bajo los hombros). En los otros bloques de sign_05 casi no aparece; algo parecido ocurre con la mesa en M04-sign_04-V03 y en M03-sign_05-V01. Eso hacía que una seña de una mano pareciera bimanual.
+
+**Compuerta.** `rest_gate` anula una mano en los frames donde su muñeca está más de τ anchos de hombro por debajo del punto medio de los hombros y se mueve menos de0,03 anchos por frame (media de ±2 frames). Es determinista y label-free; τ∈{1,3; 1,6} se fijó antes de evaluar. Resultado: τ1,3 da 1104 y τ1,6 da1106, con M04 +15 en ambos.
+
+**Otras pruebas.** Modelos lineales/SVM sobre los mismos rasgos dan 1065–1089, y combinados con el MLP 1089–1092: los errores son de representación, no de clasificador. Jitter temporal, forma de mano en el pico, MLP más ancho y más weight decay quedan entre 1090 y1097.
+
+**Estimación honesta.** LOSO anidado sobre las21 variantes de las iteraciones2–3. En los empates de puntuación interna se promedia el resultado externo de los empatados (M03: tres variantes empatadas a708). Resultado: **1083,3/1125 = 96,30%**. Sin promediar empates, eligiendo por orden de registro, da 1074 (95,47%). La selección interna, que entrena con una sola persona, es ruidosa: para M04 eligió `v3_peak`.
+
+**Candidato por regla, no por máximo a posteriori:** la mayor puntuación interna sumada sobre todos los pares es **`v3_gate13`**, con 1104/1125 (98,13%): M02 373, M03 366, M04 365; por semilla 1104/1106/1104.
+
+**Bundle `bundle_iter3_v1`.**
+
+- Refit sobre1125 clips + 4 copias aumentadas, 3 semillas.
+- Restauración en proceso nuevo: diferencia4e-11, invariante al orden, 0,016s por clip.
+- SHA de `bundle.json`: `0b8bb97fb08efbc095b9af298d3bbb4c23a20734efdbcd88e1e2b5c56564b991`.
+- 53/53 pruebas.
+- `wave-predict-csv --bundle-kind iter3`, que exige `--authorized-test-run`; test sin leer.
