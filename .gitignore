@@ -25,6 +25,7 @@
 # Local environments, credentials and generated tool state.
 /.venv/
 /.venv-rgb/
+/.venv-mp/
 .env
 .env.*
 !.env.example
