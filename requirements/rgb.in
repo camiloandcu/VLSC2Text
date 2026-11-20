@@ -1,0 +1,6 @@
+# GPU environment; preserve requirements/cpu.lock and .venv.
+# Resolve torch/torchvision from the official CUDA 12.1 index.
+torch==2.4.1+cu121
+torchvision==0.19.1+cu121
+numpy==1.26.4
+Pillow==11.3.0

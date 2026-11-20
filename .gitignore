@@ -39,3 +39,6 @@ __pycache__/
 htmlcov/
 
 docs/private
+# Detailed sample audit and supplied manual remain local.
+/docs/02_data_audit.json
+/docs/Manual_LSC5.md
