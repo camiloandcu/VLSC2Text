@@ -178,6 +178,14 @@ La CLI también ofrece `budget-init/reserve/bind/settle`, `pilot` y `predict-tra
 
 Implementado el20nov (`delivery.py`): `delivery-loso --seed {17,29,43}`, `finalfit-baseline --seeds ...` y `validate-submission`. `predict_bundle`/`write_submission` existen como funciones de biblioteca y rechazan rutas test, salvo una habilitación explícita futura. El bundle es `r0_mlp_bundle_v1`: pesos `state_dict`, escaladores `.npz`, `bundle.json` con hashes y promedio de probabilidades. Evidencia en07 §13.
 
+Implementado el20nov (`wave.py`): `wave-finalfit` y `wave-predict-csv`. El segundo exige `--authorized-test-run` para leer test, mapea `<id>.npy` desde la plantilla y escribe/valida el CSV. Transformaciones deterministas por muestra:
+
+1. lateralidad canónica label-free;
+2. normalización corporal R1/R2 (191 features por frame);
+3. estadísticas + pirámide para el MLP y segmento activo para la TCN.
+
+Bundle `lsc5_wave_bundle_v1`: seis miembros con sus normalizadores, permutación facial y hashes.
+
 Las interfaces siguientes son **propuestas para incrementos posteriores**; no son comandos disponibles en este incremento:
 
 ```text

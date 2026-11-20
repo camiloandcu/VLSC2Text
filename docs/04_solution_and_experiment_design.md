@@ -325,7 +325,7 @@ Sin esa decisión, la regla vigente se conserva.
 - Se respetan las reglas del servidor.
 - Se usa LOSO con estado aprendido fit-only.
 
-**Criterio práctico de promoción.** Ganancia OOF ≥3 aciertos frente al campeón y media por persona positiva. Las regresiones por persona siempre se reportan y se consideran en la decisión. La opción B de§16 (E01+E08) queda admisible como candidata. Diagnósticos y candidatas propuestos en el [ítem de diagnóstico](../openspec/changes/accuracy-diagnostics/proposal.md).
+**Criterio práctico de promoción.** Ganancia OOF ≥3 aciertos frente al campeón y media por persona positiva. Las regresiones por persona siempre se reportan y se consideran en la decisión. La opción B de§16 (E01+E08) queda admisible como candidata. Diagnósticos y candidatas propuestos en el [ítem de diagnóstico](../openspec/changes/archive/2026-11-20-accuracy-diagnostics/proposal.md).
 
 
 ## 18. Consecuencias de X1–X3/X7 y siguiente ola
@@ -341,3 +341,12 @@ Resultados en07 §13. R1 queda acreditada empíricamente, así que se reactivan 
 | **X9 · reextracción de landmarks** | MediaPipe con complejidad2 o sobre recortes de mitad superior a mayor resolución, para reducir el37% de frames sin manos. Se mide primero la tasa de detección en los30 clips de X1. | Menos frames sin manos y ganancia OOF. |
 
 Cada ítem compara también con la mejor variante anterior; se usa la promoción flexibilizada de§17.
+
+
+## 19. Candidato de entrega tras la ola
+
+Resultados en07 §14. **Candidato:** X4+X6 al 50/50 sobre landmarks normalizados con lateralidad canónica, 93,87% LOSO de desarrollo. Supera ampliamente a E01 y al objetivo del80%. El bundle de E01 se conserva como respaldo técnico.
+
+RGB de manos (X5) y una tercera receta quedan aplazados: su valor esperado es bajo frente al riesgo de calendario. Mejoras posibles si se reabre exploración antes del freeze: separar sign_02, sign_04 y sign_05 (rasgos de movimiento o forma local) y añadir RGB de manos con extracción completa.
+
+**Siguiente paso operativo:** freeze de `bundle_x4x6_v1`, inferencia test autorizada, validación del CSV y evaluación1 según la política de§12. Requiere autorización explícita.

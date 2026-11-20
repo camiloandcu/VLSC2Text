@@ -294,3 +294,61 @@ Los nueve modelos se restauraron desde NPY originales en proceso nuevo con difer
 `validate-submission` y `write_submission` están probados con plantillas sintéticas; **no se generó CSV de test**. El bundle queda listo como respaldo entregable; freeze, inferencia test y envío siguen sin autorizar.
 
 **Consecuencia.** El cuello de botella principal identificado es la lateralidad más la dependencia de sesión y encuadre, no la capacidad del modelo. Próximos ítems propuestos en04 §18.
+
+
+## 14. Ola X4/X5/X6/X8/X9 · 92–94% LOSO · 20nov2026
+
+Todo con train, CPU/GPU local, LOSO750/375, estado fit-only y promedio de semillas17/29/43. Se compara contra el promedio de semillas de E01 (676). Código en `src/lsc5/wave.py` y `scripts/wave`; artefactos privados en `artifacts/wave`.
+
+| Variante | Cambio | Aciertos (promedio de semillas) | Accuracy | M02/M03/M04 | Ganados/perdidos frente a E01 |
+|---|---|---:|---:|---|---|
+| E01 (referencia) | R0 absoluto | 676 | 60,09% | 171/278/227 | — |
+| X8a | R0 con lateralidad canónica | 731 | 64,98% | 226/284/221 | 191/136 |
+| X8b | R0 + aumento por espejo + TTA | 845 | 75,11% | 257/323/265 | 210/41 |
+| X4 sin canónica | Normalización corporal R1/R2 (191) + MLP de estadísticas y pirámide | 789 | 70,13% | 134/334/321 | 278/165 |
+| **X4 canónica** | Normalización corporal + lateralidad canónica | **1041** | **92,53%** | 363/352/326 | 420/55 |
+| X6 | TCN `compact_tcn_v2` sobre la secuencia canónica del segmento activo, con aumentos | 1033 | 91,82% | 351/348/334 | frente a X4: 33/41 |
+| **X4+X6, 50/50** | Promedio de probabilidades | **1056** | **93,87%** | 372/353/331 | frente a X4: +9/+1/+5 por persona |
+
+Por semilla, la pareja da 1051/1060/1066.
+
+**Matriz OOF de X4+X6** (filas=verdad): sign_01 224/0/1/0/0; sign_02 0/209/0/15/1; sign_03 0/0/225/0/0; sign_04 0/18/0/205/2; sign_05 1/22/0/9/193. Los errores restantes son sobre todo confusiones sign_02↔sign_04 y sign_05→sign_02.
+
+**Control de fuga.** El mismo pipeline X4 canónico, con etiquetas permutadas dentro de cada persona de ajuste, da151/1125 (13,4%), por debajo del azar.
+
+**Interpretación.** Las dos palancas explican casi toda la ganancia y son complementarias:
+
+- **Normalización corporal:** elimina posición y encuadre por sesión.
+- **Lateralidad canónica:** elimina la diferencia zurda/diestra.
+
+Por separado cada una aporta poco (65–70%); juntas, 92,5%.
+
+**Detalles de la canonicalización.** Es label-free y por clip: se detecta la muñeca activa por su elevación sobre el reposo y, si es la izquierda, se aplica espejo `x→1−x` con intercambio de pares de pose y de bloques de mano. Marca como izquierda 370/375 clips de M02, 23 de M03 y 35 de M04. La permutación simétrica de la cara se estima con caras frontales train (involución en el70%); los features finales no usan la cara.
+
+**Límites.**
+
+- Se compararon unas siete variantes sobre el mismo OOF. El 93,87% es una estimación de desarrollo con sesgo optimista por esa selección, no una precisión poblacional.
+- Tres personas; el test es una persona no vista.
+- Los cambios se decidieron mirando resultados, en el marco de la flexibilización de04 §17.
+
+**X9 · reextracción de landmarks: negativa.** Sobre1805 frames de los30 clips: 657 frames sin manos en el NPY; MediaPipe con complejidad2 recupera 7 y con recorte de torso 15. Los huecos corresponden sobre todo a manos realmente fuera de la zona de signado. No se reextrae.
+
+**X5 · RGB centrado en manos.** Subconjunto de285 clips (95 por persona), DINOv2 congelado, K16, MLP de pirámide y LOSO con3 semillas:
+
+| Entrada | Accuracy |
+|---|---:|
+| Frame global | 51,2% |
+| ROI de torso | 58,2% |
+| Recorte de mano dominante, canónico | **66,7%** |
+| Mano+ROI | 67,7% |
+
+El recorte de mano cumple el criterio de ≥10 puntos sobre el global, pero sigue muy lejos de landmarks: X4+X6 hace268/285 (94,0%) en el mismo subconjunto. Combinarlo con w=0,25 da +2 aciertos, dentro del ruido. RGB queda aplazado como posible complemento. La extracción tardó1129s para285 clips (~4s/clip), lo que proyecta ~75min para train completo y ~25min para test.
+
+**Bundle final `bundle_x4x6_v1`.**
+
+- Refit sobre1125 clips: 3 semillas × (MLP+TCN), 293s.
+- Restauración en proceso nuevo desde NPY: diferencia máxima6e-8, invariante al orden, 0,026s por clip en CPU y RSS pico de unos222MiB.
+- SHA de `bundle.json`: `79d4cbb9b71781e5ab66afcbf535826714ef6f0bdf9e10901bd900c70e793de6`.
+- Productor del snapshot `8c6e2acfbf647ea52894b9d6c1190fbfbcac1d2cec4d583e54a4c590a0d8463f` (53 archivos). Después del refit solo cambiaron la guarda de rutas test (ahora antes de cargar el bundle) y la CLI; `finalfit` es idéntico.
+- 48/48 pruebas, incluida una prueba de extremo a extremo sintética.
+- La inferencia test (`wave-predict-csv`) exige `--authorized-test-run` y **no se ha ejecutado**.

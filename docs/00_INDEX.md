@@ -1,6 +1,6 @@
 # LatAm IA Challenge · Índice del proyecto
 
-Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada; layout NPY acreditado; bundle E01 de3 semillas listo; siguiente ola X8/X4/X6 propuesta**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
+Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada; ola X4/X6/X8 completada: 93,87% LOSO de desarrollo (E01 60,09%); bundle final verificado; inferencia test y envío pendientes de autorización**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
 
 ## Etapas y autorización vigente
 
@@ -113,7 +113,7 @@ Publicación: auditoría detallada `docs/02_data_audit.json` y manual `docs/Manu
 
 Publicación efectiva: [PR1](https://github.com/camiloandcu/VLSC2Text/pull/1) fusionado el20nov2026 a las19:49:39UTC, verificado enGitHub. Código, documentación y continuidad en [main](https://github.com/camiloandcu/VLSC2Text/tree/main). Revisión independiente de publicación conforme:99blobs de las ramas saneadas,91archivos/41Markdown/136enlaces contra árbolGit, sin exclusiones privadas presentes. Referencias privadas de reversión no se subieron. La siguiente sesión debe continuar desde `main`. No hubo nuevo intentoML.
 
-**Objetivo y ola de diagnóstico, 20nov2026.** El usuario fijó como objetivo acercarse al80% y flexibilizó el protocolo interno (04 §17); las reglas del reto no cambian. Se propone la [ola de diagnóstico X1–X7](../openspec/changes/accuracy-diagnostics/proposal.md), con train solamente. X1 (verificación empírica de que las 1662 columnas son la serialización Holistic estándar) va primero porque condiciona normalización corporal, secuencia y recortes de mano. Cada ítem requiere aprobación de ejecución. El camino de entrega E01 sigue propuesto en paralelo como respaldo.
+**Objetivo y ola de diagnóstico, 20nov2026.** El usuario fijó como objetivo acercarse al80% y flexibilizó el protocolo interno (04 §17); las reglas del reto no cambian. Se propone la [ola de diagnóstico X1–X7](../openspec/changes/archive/2026-11-20-accuracy-diagnostics/proposal.md), con train solamente. X1 (verificación empírica de que las 1662 columnas son la serialización Holistic estándar) va primero porque condiciona normalización corporal, secuencia y recortes de mano. Cada ítem requiere aprobación de ejecución. El camino de entrega E01 sigue propuesto en paralelo como respaldo.
 
 **Ejecución aprobada, 20nov2026 («Apruebo»): X1/X2/X3/X7 y camino de entrega E01 completados en local.** Resultados en07 §13 y decisiones en04 §18.
 
@@ -124,5 +124,14 @@ Publicación efectiva: [PR1](https://github.com/camiloandcu/VLSC2Text/pull/1) fu
 - **E01 con semillas17/29/43**: promedio676/1125 (60,09%), restauraciones con diferencia0.
 - **Bundle con3 semillas** verificado sobre train. No hay freeze, CSV test ni envío.
 
-Ledger de Cronos sin cambios; ejecución local. Siguiente acción: aprobar X8 (lateralidad canónica), X4 y X6. Ítem de entrega archivado; [ola de diagnóstico](../openspec/changes/accuracy-diagnostics/proposal.md) activa.
+Ledger de Cronos sin cambios; ejecución local. Siguiente acción: aprobar X8 (lateralidad canónica), X4 y X6. Ítem de entrega archivado; [ola de diagnóstico](../openspec/changes/archive/2026-11-20-accuracy-diagnostics/proposal.md) activa.
+
+**Ola aprobada y ejecutada, 20nov2026 («Apruebo ejecutar la ola, incluso los opcionales»).** Resultados en07 §14 y decisión en04 §19.
+
+- La normalización corporal más la lateralidad canónica llevan LOSO de60,09% a92,53% (X4), y la pareja X4+X6 a **93,87%** (M02 99,2%, M03 94,1%, M04 88,3%).
+- El control con etiquetas permutadas da 13,4%, sin fuga.
+- X9 (reextraer landmarks) negativo; X5 (RGB de manos) mejora RGB a 67% pero sin aporte sobre landmarks.
+- Bundle `bundle_x4x6_v1` verificado en proceso nuevo.
+
+**Siguiente acción: autorizar freeze, inferencia test y evaluación1.** Pendiente también una revisión independiente. Commit y push directo a `main` autorizados por el usuario el20nov.
 

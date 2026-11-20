@@ -212,3 +212,15 @@ El [ítem](../openspec/changes/archive/2026-11-20-e01-delivery-path/proposal.md)
 
 
 **Ejecución del ítem de entrega, 20nov.** Corrió en CPU local, no en Cronos: unos2,5min de fits y5s de predicción. La reproducción bit a bit de E01 en local hace innecesaria la cola Slurm para recetas de este tamaño. El ledger remoto no se modificó y conserva los valores de arriba. Los diagnósticos X1–X3/X7 también corrieron en local: X1 92s, X2 172s y unos segundos el resto. El bundle de E01 con3 semillas queda como respaldo entregable. Calendario: X8/X4/X6 el21nov; freeze del mejor candidato entre el22 y el23 según04 §17; evaluación1 en cuanto se autorice, sin esperar al24.
+
+
+**Estado tras la ola, 20nov.** La ola completa corrió en CPU/GPU local: unas2h de reloj, incluidas extracciones y refit. Ledger de Cronos sin cambios; caja USD0.
+
+Ruta de entrega lista:
+
+1. Freeze de `bundle_x4x6_v1` (hashes en07 §14).
+2. `lsc5 wave-predict-csv --authorized-test-run` sobre los375 NPY test; unos10s en CPU.
+3. `validate-submission`.
+4. Carga de la evaluación1 por el integrante designado.
+
+Los pasos 2 a 4 requieren autorización humana. El primer envío conviene hacerlo pronto (posible desempate por tiempo y latencia desconocida); la segunda evaluación se reserva para recuperación técnica.
