@@ -442,3 +442,33 @@ Cada variante se evaluó con LOSO externo (semillas17/29/43) y con una puntuaci�
 - SHA de `bundle.json`: `0b8bb97fb08efbc095b9af298d3bbb4c23a20734efdbcd88e1e2b5c56564b991`.
 - 53/53 pruebas.
 - `wave-predict-csv --bundle-kind iter3`, que exige `--authorized-test-run`; test sin leer.
+
+
+## 17. Iteración4 · señales sign_04/sign_05, 98,49% LOSO (97,99% anidado) · 20nov2026
+
+**Diagnóstico.** `v3_gate13` deja21 errores; 14 son confusiones sign_05↔sign_04. Ambas señas terminan con la palma hacia arriba y afuera. Las distinguen dos cosas: sign_05 empieza con la mano en el pecho y sign_04 es bimanual. Se fijaron a priori dos grupos de rasgos label-free sobre el clip con compuerta y segmento activo:
+
+- **Contacto** (4): distancia mínima de la mano dominante a un punto del pecho, en anchos de hombro; momento en que ocurre; separación final; fracción de frames a menos de0,6.
+- **Bimanual** (6): presencia y energía de movimiento de cada mano, correlación vertical entre manos y fracción de frames con ambas.
+
+En medianas train separan bien. Distancia mínima: sign_05 0,21–0,28, sign_04 0,39–0,75. Energía de la mano no dominante: sign_04 1,7–2,5, sign_05 0–0,44.
+
+| Variante | Aciertos | Accuracy | M02/M03/M04 | Semillas | Interna sumada |
+|---|---:|---:|---|---|---:|
+| `v3_gate13` (anterior) | 1104 | 98,13% | 373/366/365 | 1104/1106/1104 | 2093 |
+| `v4_contact` | 1104 | 98,13% | 373/364/367 | 1101/1107/1100 | 2095 |
+| `v4_bimanual` | 1106 | 98,31% | 373/366/367 | 1103/1104/1108 | 2091 |
+| **`v4_contact_bimanual`** | **1108** | **98,49%** | 373/368/367 | 1104/1107/1109 | **2101** |
+
+**Estimación anidada** sobre24 variantes, con empates promediados: **1102,3/1125 = 97,99%**. Sin promediar empates: 1093 (97,16%). Para M04, la selección interna eligió `v4_bimanual` (367); antes elegía `v3_peak` (348).
+
+**Límite importante.** El LOSO anidado corrige la *selección* entre variantes, pero no el *diseño* de las variantes. Los rasgos de compuerta, contacto y bimanualidad se idearon mirando errores OOF de las tres personas. Por eso el 97,99% sigue siendo optimista frente a una persona nueva.
+
+**Candidato por regla:** `v4_contact_bimanual`.
+
+**Bundle `bundle_iter4_v1`.**
+
+- Restauración en proceso nuevo: diferencia3e-11, invariante al orden, 0,011s por clip.
+- SHA de `bundle.json`: `26439fec57a56e453ddd94d17aada28cc674e35c81c35aa7b0ad48eb2dd6b224`.
+- 54/54 pruebas.
+- CLI `iter3-finalfit --candidate v4_contact_bimanual`; inferencia con `wave-predict-csv --bundle-kind iter3`. Test sin leer.

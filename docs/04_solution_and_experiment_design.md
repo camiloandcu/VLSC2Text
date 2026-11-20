@@ -373,3 +373,10 @@ Hipótesis para la iteración3, ordenadas por valor esperado:
 **Criterio de parada de variantes.** Las variantes de clasificador ya se estancaron (1089–1106). Seguir añadiendo variantes sin una hipótesis nueva sobre bloques concretos solo infla la selección; el estimado anidado se mueve con los empates, no con mejoras reales. Cada nueva iteración debe partir de un diagnóstico de bloque como el de la compuerta.
 
 Errores residuales: M03-sign_02-V02 (brazos extendidos) y M04-sign_05-V02 (variante de pulgar arriba).
+
+
+## 22. Candidato tras la iteración4 y propuesta de freeze
+
+**Candidato:** `bundle_iter4_v1` (`v4_contact_bimanual`). Cifras: 98,49% LOSO a posteriori y 97,99% anidado (07 §17). Objetivo de iteración ≥96,5% anidado: **superado**.
+
+Quedan17 errores dispersos. Seguir iterando tiene un retorno marginal pequeño y un riesgo creciente de sobreajustar el diseño a tres personas. **Propuesta:** congelar este bundle y pasar a la inferencia test y la evaluación1, sujetas a autorización. Respaldos: iter3, iter2, X4+X6 y E01.

@@ -1,6 +1,6 @@
 # LatAm IA Challenge · Índice del proyecto
 
-Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada; iteración3 completada: candidato v3_gate13 con 98,13% LOSO (96,30% anidado); bundle iter3 verificado; cierre 27nov**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
+Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada; iteración4 completada: candidato v4_contact_bimanual con 98,49% LOSO (97,99% anidado); bundle iter4 verificado; freeze propuesto; cierre 27nov**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
 
 ## Etapas y autorización vigente
 
@@ -146,4 +146,8 @@ Detalle en07 §15, decisión en04 §20 y plan en06 §15. Siguiente objetivo: ≥
 **Iteración3, 20nov2026 («Apruebo la iteración 3»).** Una compuerta de reposo label-free elimina la mano no dominante cuando descansa baja y quieta (regazo o mesa). Con ella, el candidato `v3_gate13`, elegido por regla de puntuación interna, llega a **1104/1125 (98,13%)**. El LOSO anidado con empates promediados da **96,30%**: el objetivo ≥96,5% quedó a ~3 aciertos.
 
 Detalle en07 §16 y decisión/criterio de parada en04 §21. Freeze, inferencia test y envío requieren autorización.
+
+**Iteración4, 20nov2026 («Apruebo continuar»).** Rasgos explícitos de contacto con el pecho y bimanualidad para la confusión sign_05↔sign_04. Candidato por regla `v4_contact_bimanual`: **1108/1125 (98,49%)**; anidado **97,99%**, con lo que el objetivo ≥96,5% queda superado. El anidado no corrige el diseño de rasgos hecho mirando errores OOF.
+
+Detalle en07 §17 y propuesta de freeze en04 §22. **Siguiente acción: autorizar freeze de `bundle_iter4_v1`, inferencia test, validación del CSV y evaluación1.**
 
