@@ -17,11 +17,14 @@ REG={
  'v3_peak_jitter4_aug8':dict(W,peak=True,jitter=4,n_aug=8),
  'v3_gate13':dict(W,gate=1.3),
  'v3_gate16':dict(W,gate=1.6),
+ 'v4_contact':dict(W,gate=1.3,contact=True),
+ 'v4_bimanual':dict(W,gate=1.3,bimanual=True),
+ 'v4_contact_bimanual':dict(W,gate=1.3,contact=True,bimanual=True),
 }
 man=json.load(open(ROOT/'artifacts/cpu-pilot/train_manifest.json'))
 ids,xs,y,S=wave.load_train(ROOT/'data/train',man); perm=np.load(ROOT/'artifacts/wave/face_perm.npy')
 canon=[wave.canonical(x,perm) for x in xs]
-ref=np.load(I2/'mlp_velshape_active_viewaug4.npz')['probabilities']
+ref=np.load(OUT/'v3_gate13.npz')['probabilities'] if (OUT/'v3_gate13.npz').exists() and any(a.startswith('v4') for a in sys.argv[1:]) else np.load(I2/'mlp_velshape_active_viewaug4.npz')['probabilities']
 def fit(cfg,fx,fy,fs,seed): return wi.fit_mlp_cfg(fx,fy,fs,seed,hidden=cfg.get('hidden',128),dropout=cfg.get('dropout',0.3),wd=cfg.get('wd',1e-3))
 def run(name):
     cfg=REG[name]; t=time.time(); rng=np.random.default_rng(123); n=cfg.get('n_aug',0)
