@@ -6,14 +6,14 @@ Continuación autorizada: la investigación de la etapa 2 se encuentra en [03_st
 
 ## 1. Lectura y autoridad de las fuentes
 
-Este documento es el registro canónico del encuadre, las aclaraciones y los pendientes. La evidencia numérica detallada está en [02_data_audit.json](02_data_audit.json). No duplicar estos registros en nuevos resúmenes o historiales.
+Este documento es el registro canónico del encuadre, las aclaraciones y los pendientes. La evidencia numérica detallada está en [02_data_audit.json](02_data_audit_public.json). No duplicar estos registros en nuevos resúmenes o historiales.
 
 | Fuente | Alcance y autoridad |
 |---|---|
 | [Manual_LSC5.md](Manual_LSC5.md) | Instrucciones locales suministradas por el usuario; conservar el original. El archivo real comienza con `Manual`, no `MANUAL`. |
 | [Página oficial: dataset, reglas y evaluación](https://www.latamiachallenge.com/dataset.php#reglas) | Reglas públicas y entregables. Consultada el 10 de noviembre mediante HTTP público con `curl`; el navegador de investigación no pudo abrirla. |
 | Aclaraciones del usuario del 10 y 19 de noviembre | Prioridades, fecha límite, composición, recursos y presupuesto. El 19 confirmó dos oportunidades de evaluación y que cuenta la última; feedback y ventanas desconocidos. Distinguirlas de reglas publicadas. |
-| [02_data_audit.json](02_data_audit.json) | Observaciones locales; alcance y limitaciones de cada comprobación. |
+| [02_data_audit.json](02_data_audit_public.json) | Observaciones locales; alcance y limitaciones de cada comprobación. |
 
 Si aparece una diferencia, conservar ambas versiones y pedir aclaración a la organización; no convertir una inferencia en regla. El manual salta de la sección 4 a la 6: es una irregularidad editorial, no evidencia de una regla perdida.
 

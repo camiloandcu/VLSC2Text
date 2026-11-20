@@ -6,7 +6,7 @@ Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrad
 
 | Etapa | Estado de la puerta | Autoridad, fecha y revisión cubierta |
 |---|---|---|
-| 1 · Problema | Avance autorizado | Solicitud del usuario de investigación, 10 nov. [Definición y reglas](01_problem_definition.md), [auditoría](02_data_audit.json). |
+| 1 · Problema | Avance autorizado | Solicitud del usuario de investigación, 10 nov. [Definición y reglas](01_problem_definition.md), [auditoría](02_data_audit_public.json). |
 | 2 · Investigación | Avance autorizado | Solicitud del usuario de alternativas, 10 nov. [Síntesis](03_state_of_art.md), [índice de fuentes](../literature/README.md). |
 | 3 · Alternativas y experimentos | R2.1 aprobada por el usuario | «Sí, continúa», 19 nov, tras presentar estrategia y siguiente bloque CPU. [Protocolo R2.1](04_solution_and_experiment_design.md), techo USD10 y política de dos evaluaciones/última vigente. No autoriza compras/envíos. |
 | 4 · Fundación | Incrementos CPU autorizados y revisados | Arquitectura05 y ejecución06 aplicadas al alcance W00/W01/recorrido mínimo W02. [Propuesta del primer ítem](../openspec/changes/archive/2026-11-19-cpu-pilot-walking-path/proposal.md) posee sus AC. La ampliación R2-E01 tiene propuesta/AC y pase focal propios; el resto de fundación se revisa cuando sea ejecutable. |
@@ -32,7 +32,7 @@ El usuario confirmó después dos evaluaciones y que cuenta la última; desconoc
 | Tema | Registro autoritativo |
 |---|---|
 | Objetivo, reglas, cierre y preguntas externas | [01](01_problem_definition.md). Cierre comunicado: 25 nov, Bogotá; hora/canal pendientes. |
-| Datos y alcance de las comprobaciones | [02](02_data_audit.json). Test reservado a inferencia fija; datos de solo lectura. |
+| Datos y alcance de las comprobaciones | [02](02_data_audit_public.json). Test reservado a inferencia fija; datos de solo lectura. |
 | Literatura y sus límites | [03](03_state_of_art.md), biblioteca pública enlazada desde allí. Citas por DOI o referencia primaria. |
 | Alternativas, recetas, LOSO, promoción y semillas | [04 R2.1](04_solution_and_experiment_design.md). §§11–12 poseen mejora, escalamiento y evaluaciones; conserva el catálogo R2. |
 | Contratos, cachés, componentes e inferencia | [05 R2.1](05_technical_architecture.md). §9 distingue CLI implementada del primer piloto e interfaces futuras. |
@@ -101,3 +101,5 @@ Revisión independiente del incidente: V1/V2 verificados, V3sin medición final/
 **Acceso local privado.** Datos, entornos, artefactos y textos completos no viajan con GitHub. Otra sesión en esta misma máquina conserva esos recursos. SSH usa `~/.config/latamiachallenge/cronos.env` y hostkey fijada; consultar08 y helpers privados sin imprimir secretos. No relanzar `rgb_loso_sequence.py`: agotó su intento y no es un mecanismo de recuperación. Si se trabaja desde otra máquina, detener ejecución hasta obtener los recursos privados por un canal acordado; el repositorio público por sí solo no reproduce los resultados medidos.
 
 **Publicación solicitada.** Usuario solicitó publicar en `camiloandcu/VLSC2Text` con commits pequeños por cambios reales, conservando autoría/fechas y exclusiones privadas. Preparación y verificación autorizadas; método terminalGit/CLI consultado antes de usar la cuenta. No confundir publicación del código con autorización para reintentarGPU, gastar o enviar predicciones oficiales. Usuario autorizó después crear o pushear `main`; se preparará base mínima enmain y PR de la rama `feat/lsc5-project`. Estado de publicación se actualizará tras operación real.
+
+Publicación: auditoría detallada `docs/02_data_audit.json` y manual `docs/Manual_LSC5.md` permanecen locales, respaldados y excluidos del historial público con autorización explícita. El resumen público agregado es `02_data_audit_public.json`; no sustituye el original privado como evidencia detallada. GitHub recibirá solo ramas saneadas; el bundle de reversión es privado y nunca se publica.

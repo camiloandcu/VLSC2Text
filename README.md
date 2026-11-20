@@ -11,7 +11,7 @@ El proyecto cuenta con una auditoría de entrenamiento, una revisión de 87 recu
 ## Documentación
 
 - [Problema y reglas](docs/01_problem_definition.md).
-- [Evidencia de datos](docs/02_data_audit.json).
+- [Evidencia de datos](docs/02_data_audit_public.json).
 - [Estado del arte](docs/03_state_of_art.md) e [índice de fuentes](literature/README.md).
 - [Alternativas y protocolo experimental](docs/04_solution_and_experiment_design.md).
 - [Arquitectura técnica](docs/05_technical_architecture.md).

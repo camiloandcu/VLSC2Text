@@ -1,0 +1,47 @@
+{
+  "checked_date": "2026-11-10",
+  "scope": "Public aggregate summary of the local detailed training audit. No sample IDs, paths, individual hashes or payloads are distributed.",
+  "private_audit_sha256": "cb24a57bb4ce663713f5ed938982b0df87433b27fd06a1ab4d7f52a3c8068499",
+  "training": {
+    "npy_files": 1125,
+    "signers": {
+      "M02": 375,
+      "M03": 375,
+      "M04": 375
+    },
+    "signs": {
+      "S01": 225,
+      "S02": 225,
+      "S03": 225,
+      "S04": 225,
+      "S05": 225
+    },
+    "views": {
+      "V01": 375,
+      "V02": 375,
+      "V03": 375
+    },
+    "cameras": {
+      "C01": 225,
+      "C02": 225,
+      "C03": 225,
+      "C04": 450
+    },
+    "dtype": {
+      "<f8": 1125
+    },
+    "frame_lengths": {
+      "min": 33,
+      "max": 97,
+      "median": 55,
+      "mean": 56.25244444444444,
+      "unique": 58
+    }
+  },
+  "limitations": [
+    "Detailed audit and supplied manual remain local and excluded from Git.",
+    "Test payloads are reserved for fixed-model inference.",
+    "Aggregate counts do not establish anatomical landmark semantics.",
+    "See project index and results record for subsequent experiment evidence."
+  ]
+}

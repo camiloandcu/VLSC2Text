@@ -6,7 +6,7 @@ Registro de evidencia y plan de reporte, actualizado el 19 de noviembre de2026 p
 
 Este registro define qué evidencia futura permite redactar un reporte técnico y evaluar la viabilidad de un artículo. El protocolo experimental pertenece a [04](04_solution_and_experiment_design.md), los artefactos y schemas a [05](05_technical_architecture.md), y la ejecución/aceptación a [06](06_delivery_and_iteration_plan.md). No copiar sus contratos aquí.
 
-La [auditoría de datos](02_data_audit.json) contiene observaciones ya realizadas. Las cifras de papers ajenos pertenecen al [índice bibliográfico](../literature/resources.csv), con dataset/protocolo; nunca rellenan casillas de resultados propios.
+La [auditoría de datos](02_data_audit_public.json) contiene observaciones ya realizadas. Las cifras de papers ajenos pertenecen al [índice bibliográfico](../literature/resources.csv), con dataset/protocolo; nunca rellenan casillas de resultados propios.
 
 ## 2. Evidencia mínima que debe conservar cada comparación
 
