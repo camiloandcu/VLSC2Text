@@ -148,18 +148,25 @@ def main(argv=None):
     item.add_argument("--data-root", type=Path, required=True)
     item.add_argument("--manifest", type=Path, required=True)
     item.add_argument("--out", type=Path, required=True)
+    item = commands.add_parser("iter2-finalfit")
+    item.add_argument("--data-root", type=Path, required=True)
+    item.add_argument("--manifest", type=Path, required=True)
+    item.add_argument("--out", type=Path, required=True)
     item = commands.add_parser("wave-predict-csv")
     item.add_argument("--bundle", type=Path, required=True)
     item.add_argument("--landmarks-dir", type=Path, required=True)
     item.add_argument("--template", type=Path, required=True)
     item.add_argument("--out", type=Path, required=True)
+    item.add_argument("--bundle-kind", choices=["wave", "iter2"], default="iter2")
     item.add_argument("--authorized-test-run", action="store_true",
                       help="Required to read test payloads; only for a frozen, authorised bundle")
     args = parser.parse_args(argv)
     result = {"command": args.command}
-    if args.command in {"wave-finalfit", "wave-predict-csv"}:
-        from . import delivery, wave
-        if args.command == "wave-finalfit":
+    if args.command in {"wave-finalfit", "wave-predict-csv", "iter2-finalfit"}:
+        from . import delivery, wave, wave_iter
+        if args.command == "iter2-finalfit":
+            result = wave_iter.finalfit(args.data_root, read_json(args.manifest), args.out)
+        elif args.command == "wave-finalfit":
             result = wave.finalfit(args.data_root, read_json(args.manifest), args.out)
         else:
             ids = [l.split(",")[0] for l in args.template.read_text(encoding="utf-8").splitlines()[1:] if l.strip()]
@@ -167,7 +174,8 @@ def main(argv=None):
             missing = [str(p) for p in paths if not p.is_file()]
             if missing:
                 raise ValueError(f"{len(missing)} template IDs without landmarks file")
-            probs = wave.predict_bundle(args.bundle, paths, allow_test=args.authorized_test_run)
+            predictor = wave_iter.predict_bundle if args.bundle_kind == "iter2" else wave.predict_bundle
+            probs = predictor(args.bundle, paths, allow_test=args.authorized_test_run)
             result = delivery.write_submission(args.template, ids, probs, args.out)
         print(json.dumps(result, indent=2, allow_nan=False, default=str))
         return
