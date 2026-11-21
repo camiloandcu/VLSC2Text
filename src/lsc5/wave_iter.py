@@ -65,13 +65,13 @@ def sequence(x, relations=False, handshape=False):
     return np.concatenate(parts, 1)
 
 
-def view_augment(x, rng):
+def view_augment(x, rng, yaw_lo=0.7, max_roll=8.0):
     """Simulate camera yaw/roll/zoom on raw image-fraction coordinates of pose and hands (train only)."""
     pose, face, lh, rh = (b.copy() for b in wave.split_blocks(x))
     sh = pose[:, [11, 12], :2]
     c = np.median(sh.reshape(-1, 2), axis=0)
-    yaw = rng.uniform(0.7, 1.0)                       # horizontal foreshortening
-    ang = math.radians(rng.uniform(-8, 8))
+    yaw = rng.uniform(yaw_lo, 1.0)                    # horizontal foreshortening
+    ang = math.radians(rng.uniform(-max_roll, max_roll))
     zoom = rng.uniform(0.85, 1.15)
     rot = np.array([[math.cos(ang), -math.sin(ang)], [math.sin(ang), math.cos(ang)]])
     for block in (pose, lh, rh):
@@ -247,7 +247,7 @@ def features(c, cfg, rng=None, augment=False):
     if cfg.get("gate"):
         c = rest_gate(c, low=cfg["gate"])
     if augment and "view" in cfg.get("aug", ()):
-        c = view_augment(c, rng)
+        c = view_augment(c, rng, yaw_lo=cfg.get("yaw_lo", 0.7), max_roll=cfg.get("roll", 8.0))
     if cfg.get("active"):
         c = jitter_segment(c, rng, cfg.get("jitter", 0)) if (augment and cfg.get("jitter")) else c[wave.active_segment(c)]
     s = sequence(c, handshape=cfg.get("shape", False))
@@ -258,9 +258,11 @@ def features(c, cfg, rng=None, augment=False):
     if cfg.get("peak"):
         out = np.concatenate([out, peak_handshape(c)])
     if cfg.get("contact"):
-        out = np.concatenate([out, contact_features(c)])
+        out = np.concatenate([out, contact_features(c, scale_mode=cfg.get("contact_scale", "width"))])
     if cfg.get("bimanual"):
         out = np.concatenate([out, bimanual_features(c)])
+    if cfg.get("early"):
+        out = np.concatenate([out, early_features(c)])
     return out
 
 
@@ -409,12 +411,22 @@ def predict_bundle_v3(bundle_dir, paths, allow_test=False):
 
 
 # ---------------------------------------------------------------- iteration 4: sign_04 vs sign_05 cues
-def contact_features(c):
-    """Dominant (right after canonicalisation) hand closeness to the chest and when it happens."""
-    pose, _, _, rh = wave.split_blocks(c)
+def _body_scale(pose, mode="width"):
+    """Shoulder width (default) or geometric mean of shoulder width and nose-to-shoulder height (less yaw-bound)."""
     width = np.linalg.norm(pose[:, 11, :2] - pose[:, 12, :2], axis=1)
     ok = width > 1e-3
     scale = np.median(width[ok]) if ok.any() else 1.0
+    if mode == "geo" and ok.any():
+        neck = np.median(np.abs((pose[ok, 11, 1] + pose[ok, 12, 1]) / 2 - pose[ok, 0, 1]))
+        if neck > 1e-3:
+            scale = math.sqrt(scale * neck)
+    return scale
+
+
+def contact_features(c, scale_mode="width"):
+    """Dominant (right after canonicalisation) hand closeness to the chest and when it happens."""
+    pose, _, _, rh = wave.split_blocks(c)
+    scale = _body_scale(pose, scale_mode)
     chest = (pose[:, 11, :2] + pose[:, 12, :2]) / 2 + np.array([0.0, 0.4]) * scale
     present = (rh != 0).any((1, 2))
     pts = np.where(present[:, None], rh[:, :, :2].mean(1), pose[:, 16, :2])
@@ -442,3 +454,18 @@ def bimanual_features(c):
     both = ~np.isnan(ys[0]) & ~np.isnan(ys[1])
     corr = float(np.corrcoef(ys[0][both], ys[1][both])[0, 1]) if both.sum() > 3 and ys[0][both].std() > 1e-6 and ys[1][both].std() > 1e-6 else 0.0
     return np.array(out + [corr, both.mean()], np.float32)
+
+
+# ---------------------------------------------------------------- iteration 5: onset/offset phase cues
+def early_features(c):
+    """Where the dominant hand starts and ends relative to the chest (first/last third of the clip), the
+    start-to-end displacement, and how present the non-dominant hand is in the first third. Label-free."""
+    pose, _, lh, rh = wave.split_blocks(c)
+    scale = _body_scale(pose)
+    chest = (pose[:, 11, :2] + pose[:, 12, :2]) / 2 + np.array([0.0, 0.4]) * scale
+    present = (rh != 0).any((1, 2))
+    pts = (np.where(present[:, None], rh[:, :, :2].mean(1), pose[:, 16, :2]) - chest) / scale
+    k = max(1, len(pts) // 3)
+    start, end = pts[:k].mean(0), pts[-k:].mean(0)
+    lpres = (lh != 0).any((1, 2))
+    return np.array([*start, *end, *(end - start), np.linalg.norm(start), lpres[:k].mean()], np.float32)

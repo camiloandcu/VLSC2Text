@@ -472,3 +472,32 @@ En medianas train separan bien. Distancia mínima: sign_05 0,21–0,28, sign_04 
 - SHA de `bundle.json`: `26439fec57a56e453ddd94d17aada28cc674e35c81c35aa7b0ad48eb2dd6b224`.
 - 54/54 pruebas.
 - CLI `iter3-finalfit --candidate v4_contact_bimanual`; inferencia con `wave-predict-csv --bundle-kind iter3`. Test sin leer.
+
+## 18. Iteración5 · negativa, se mantiene iter4 · 21nov2026
+
+**Objetivo.** Reducir la confusión sign_04↔sign_05 (13 de los 17 errores de iter4, sobre todo en vistas laterales) con tres ideas fijadas antes de correr:
+
+- `early`: posición de la mano dominante al inicio y al final, respecto al pecho;
+- `yaw`: aumento de vista más amplio (yaw 0,5–1, roll ±12°);
+- `scale`: escala de contacto menos ligada al giro, √(ancho de hombros × altura nariz-hombros).
+
+La verificación previa ya debilitó la hipótesis de escala: el ancho de hombros no se encoge en V02 ni V03 (0,208 en V01; 0,220 y 0,199 en las laterales).
+
+**Regla preregistrada.** Adoptar solo si (a) la selección por suma de puntajes internos elige una variante de iteración5, (b) el estimado anidado supera el 97,99% y (c) ninguna persona baja en LOSO frente a iter4 (373/368/367).
+
+| Variante | Aciertos | Accuracy | M02/M03/M04 | Semillas | Suma interna |
+|---|---:|---:|---|---|---:|
+| `v4_contact_bimanual` (referencia) | **1108** | **98,49%** | 373/368/367 | 1104/1107/1109 | 2101 |
+| `v5_early` | 1105 | 98,22% | 373/368/364 | 1103/1107/1104 | 2097 |
+| `v5_yaw` | 1100 | 97,78% | 373/367/360 | 1098/1102/1105 | 2113 |
+| `v5_scale` | 1104 | 98,13% | 373/368/363 | 1104/1107/1094 | 2102 |
+| `v5_early_yaw` | 1103 | 98,04% | 373/368/362 | 1097/1106/1101 | 2113 |
+| `v5_all` | 1102 | 97,96% | 373/367/362 | 1098/1105/1101 | 2032 |
+
+**Estimado anidado** sobre 29 variantes, con empates promediados: 1108/1125 = 98,49%.
+
+**Decisión.** Se cumplen (a) y (b), pero no (c): `v5_yaw` y `v5_early_yaw`, empatadas en 2113, bajan M04 en 7 y 5 clips. Se mantiene `bundle_iter4_v1`.
+
+**Lectura.** El aumento de vista más amplio sube el puntaje interno, que se entrena con una sola persona, pero empeora con dos. Ese puntaje es un proxy débil cuando el aumento compensa escasez de datos. Ninguna variante supera a iter4 en LOSO.
+
+**Cierre.** Se termina la iteración de rasgos.
