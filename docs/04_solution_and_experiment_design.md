@@ -395,3 +395,18 @@ Quedan17 errores dispersos. Seguir iterando tiene un retorno marginal pequeño y
 - (c) ninguna persona baja frente a iter4 (373/368/367).
 
 Si no se cumple alguna, se conserva `bundle_iter4_v1`. El estimado anidado sobre las 24 variantes más esta se reporta como información, no como condición. Si se adopta, se hace finalfit, verificación en proceso nuevo y freeze del nuevo bundle antes de cualquier inferencia test.
+
+
+## 24. Iteración7 · ensemble fijado por regla y TTA de vista · criterio preregistrado · 24nov2026
+
+**Motivo.** El LOSO ya no distingue mejoras pequeñas: las semillas varían entre 1104 y 1109 y cambiar un clip de entrenamiento mueve ±3–4 por persona. Estas dos candidatas no buscan ganar LOSO sino reducir la varianza ante una persona nueva. Se fijan antes de calcular cualquier resultado. Aprobado por el usuario el 24nov2026.
+
+**E7a · ensemble de variantes con compuerta.** Promedio simple de probabilidades de las 10 variantes registradas con `gate=1.3` en las iteraciones 3–6: `v3_gate13`, `v4_contact`, `v4_bimanual`, `v4_contact_bimanual`, `v5_early`, `v5_yaw`, `v5_scale`, `v5_early_yaw`, `v5_all` y `v6_pose_robust`. El conjunto lo define la regla, no el puntaje. Se evalúa con los OOF LOSO ya guardados (promedio de semillas 17/29/43 de cada variante), sin reentrenar.
+
+- **Adoptar si:** ≥1106/1125 y ninguna persona baja más de 2 clips frente a iter4 (373/368/367).
+
+**E7b · TTA de vista sobre `v4_contact_bimanual`.** Mismos modelos y entrenamiento que iter4. En predicción, cada clip se evalúa con 5 transformaciones de cámara fijas, iguales para todos los clips, y se promedian las probabilidades. Las transformaciones (escorzo horizontal, rotación en grados, zoom) son: (1; 0; 1), (0,85; 0; 1), (0,7; 0; 1), (1; +5; 1) y (1; −5; 1). Se aplican en el mismo punto que el aumento de entrenamiento: después de la compuerta y antes del tramo activo. Son deterministas por muestra y válidas en test. Mismo LOSO 750/375, semillas 17/29/43 y rng de aumento 123. Control de cordura: la transformación identidad sola debe reproducir el OOF de iter4.
+
+- **Adoptar si:** ≥1108/1125 y ninguna persona baja frente a iter4.
+
+**Desempate y salida.** Si pasan las dos, gana la de más aciertos; si empatan, la de mayor mínimo por persona; si siguen empatadas, E7b, que tiene menos componentes. Si no pasa ninguna, se conserva `bundle_iter4_v1`. La candidata adoptada recibe finalfit, verificación en proceso nuevo y freeze antes de cualquier inferencia test. No se combinan E7a y E7b ni se prueban otros conjuntos o transformaciones.
