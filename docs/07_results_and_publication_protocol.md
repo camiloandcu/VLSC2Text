@@ -523,3 +523,17 @@ La verificación previa ya debilitó la hipótesis de escala: el ancho de hombro
 (a) Se cumple: cambian los rasgos de 1 clip (`S02_M02_V01_C02_Clip395`, que el código congelado no reflejaba). (b) No se cumple: 1105 < 1108. (c) No se cumple: M03 −3 y M04 −1. **Se mantiene `bundle_iter4_v1`.**
 
 **Lectura.** Cambiar un solo clip de entrenamiento mueve el LOSO en ±3–4 clips por persona, lo mismo que el rango entre semillas (1104–1109). Diferencias de ese tamaño son ruido. La fragilidad ante fotogramas sin pose queda documentada como riesgo residual para la persona de test; en train afecta a 1 de 63.284 fotogramas.
+
+## 20. Iteración7 · ensemble y TTA de vista · negativa, se mantiene iter4 · 24nov2026
+
+Reglas preregistradas en04 §24 y publicadas en GitHub antes de calcular resultados (commit `f405be5`; hash `5e0daae3…` en `artifacts/iter3/prereg_iter7.json`). Aprobado por el usuario el 24nov2026.
+
+| Candidata | Aciertos | M02/M03/M04 | Regla | Resultado |
+|---|---:|---|---|---|
+| `v4_contact_bimanual` (referencia) | **1108** | 373/368/367 | — | — |
+| E7a · ensemble de las 10 variantes con compuerta | 1104 | 373/367/364 | ≥1106 y ninguna persona baja más de 2 | No pasa |
+| E7b · TTA de vista (5 transformaciones fijas) | 1107 | 373/367/367 | ≥1108 y ninguna persona baja | No pasa |
+
+Semillas de E7b: 1104/1105/1110. Control de cordura: sin TTA, el mismo código reproduce el OOF de iter4 con diferencia0 (1108). Resultados en `artifacts/iter3/iter7.json`.
+
+**Decisión.** Se conserva `bundle_iter4_v1`. Es la cuarta comparación consecutiva (iteraciones5, 6 y7) en que ninguna alternativa razonable supera al candidato fuera del ruido. Se cierra la exploración de modelos.

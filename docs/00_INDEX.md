@@ -1,6 +1,6 @@
 # LatAm IA Challenge · Índice del proyecto
 
-Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada; iteración4 completada: candidato v4_contact_bimanual con 98,49% LOSO (97,99% anidado); bundle iter4 verificado; iteración5 negativa (ninguna variante supera 1108; criterio por persona no cumplido); revisión independiente e iteración6 negativa (07 §19); se mantiene iter4 congelado y sin enviar; cierre 27nov**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
+Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada; iteración4 completada: candidato v4_contact_bimanual con 98,49% LOSO (97,99% anidado); bundle iter4 verificado; iteración5 negativa (ninguna variante supera 1108; criterio por persona no cumplido); revisión independiente e iteraciones6 y7 negativas (07 §§19–20); se mantiene iter4 congelado y sin enviar; cierre 27nov**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
 
 ## Etapas y autorización vigente
 
@@ -152,3 +152,5 @@ Detalle en07 §16 y decisión/criterio de parada en04 §21. Freeze, inferencia t
 Detalle en07 §17 y propuesta de freeze en04 §22. **Siguiente acción: autorizar freeze de `bundle_iter4_v1`, inferencia test, validación del CSV y evaluación1.**
 
 **Revisión independiente e iteración6, 24nov2026 («apruebo las 6 cosas»).** Cierre reconfirmado: 27nov; bundle aún sin enviar. Control de fuga del pipeline final 11,9%; `v6_pose_robust` 1105, no adoptada por la regla preregistrada de04 §23. Pruebas corregidas y ampliadas; reporte corregido. Detalle en07 §19. **Siguiente acción: freeze de `bundle_iter4_v1`, inferencia test autorizada, validación del CSV y evaluación1.**
+
+**Iteración7, 24nov2026 («Sí, apruebo los 2»).** Ensemble de las 10 variantes con compuerta (1104) y TTA de vista (1107), con reglas preregistradas y publicadas antes de correr (04 §24): ninguna pasa. Exploración de modelos cerrada. Detalle en07 §20. **Siguiente acción: freeze de `bundle_iter4_v1`, inferencia test autorizada, validación del CSV y evaluación1.**
