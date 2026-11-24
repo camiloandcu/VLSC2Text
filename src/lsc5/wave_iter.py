@@ -249,7 +249,8 @@ def features(c, cfg, rng=None, augment=False):
     if augment and "view" in cfg.get("aug", ()):
         c = view_augment(c, rng, yaw_lo=cfg.get("yaw_lo", 0.7), max_roll=cfg.get("roll", 8.0))
     if cfg.get("active"):
-        c = jitter_segment(c, rng, cfg.get("jitter", 0)) if (augment and cfg.get("jitter")) else c[wave.active_segment(c)]
+        seg = active_segment_robust if cfg.get("pose_robust") else wave.active_segment
+        c = jitter_segment(c, rng, cfg.get("jitter", 0)) if (augment and cfg.get("jitter")) else c[seg(c)]
     s = sequence(c, handshape=cfg.get("shape", False))
     parts = [s]
     if cfg.get("vel"):
@@ -326,7 +327,8 @@ def rest_gate(c, low=1.3, slow=0.03):
 BUNDLE_V3 = "lsc5_iter3_bundle_v1"
 CANDIDATE_V3 = dict(shape=True, vel=True, active=True, aug=["view"], n_aug=4, gate=1.3)
 CANDIDATE_V4 = dict(CANDIDATE_V3, contact=True, bimanual=True)
-CANDIDATES = {"v3_gate13": CANDIDATE_V3, "v4_contact_bimanual": CANDIDATE_V4}
+CANDIDATE_V6 = dict(CANDIDATE_V4, pose_robust=True)
+CANDIDATES = {"v3_gate13": CANDIDATE_V3, "v4_contact_bimanual": CANDIDATE_V4, "v6_pose_robust": CANDIDATE_V6}
 
 
 def finalfit_v3(train_root, manifest, out, cfg=None, seeds=wave.SEEDS):
@@ -347,7 +349,7 @@ def finalfit_v3(train_root, manifest, out, cfg=None, seeds=wave.SEEDS):
                 faces.append(np.median(f[ok], 0))
     face_perm = wave.face_permutation(faces)
     np.save(out / "face_perm.npy", face_perm)
-    canon = [wave.canonical(x, face_perm) for x in xs]
+    canon = [canonical_cfg(x, face_perm, cfg) for x in xs]
     rng = np.random.default_rng(AUG_SEED)
     n = cfg.get("n_aug", 0)
     feats = [features(c, cfg) for c in canon]
@@ -404,7 +406,7 @@ def predict_bundle_v3(bundle_dir, paths, allow_test=False):
     rows = []
     with torch.inference_mode():
         for path in paths:
-            f = features(wave.canonical(np.asarray(read_sequence(path)), face_perm), cfg)
+            f = features(canonical_cfg(np.asarray(read_sequence(path)), face_perm, cfg), cfg)
             rows.append(np.mean([torch.softmax(m(torch.from_numpy(((f - mu) / sd).astype(np.float32))[None]), 1).numpy()[0]
                                  for m, mu, sd in models], 0))
     return np.stack(rows)
@@ -469,3 +471,49 @@ def early_features(c):
     start, end = pts[:k].mean(0), pts[-k:].mean(0)
     lpres = (lh != 0).any((1, 2))
     return np.array([*start, *end, *(end - start), np.linalg.norm(start), lpres[:k].mean()], np.float32)
+
+
+# ---------------------------------------------------------------- iteration 6: pose-dropout robustness
+def _pose_present(x):
+    """Frames where MediaPipe returned a pose (a missing pose is serialised as zeros)."""
+    pose = x[:, wave.POSE].reshape(len(x), 33, 4)
+    return (pose[..., :3] != 0).any((1, 2))
+
+
+def wrist_lift_robust(x):
+    """wave.wrist_lift ignoring frames without pose; identical to it when every frame has a pose."""
+    ok = _pose_present(x)
+    if not ok.any():
+        return [0.0, 0.0]
+    pose = x[ok][:, wave.POSE].reshape(int(ok.sum()), 33, 4)
+    width = np.abs(pose[:, 11, 0] - pose[:, 12, 0])
+    scale = np.median(width[width > 1e-3]) if (width > 1e-3).any() else 1.0
+    rest = np.median(pose[-3:, :, 1], axis=0)
+    return [(rest[w] - pose[:, w, 1].min()) / scale for w in (15, 16)]
+
+
+def canonical_robust(x, face_perm):
+    left, right = wrist_lift_robust(x)
+    return wave.mirror(x, face_perm) if left > right else x
+
+
+def active_segment_robust(x, margin=3):
+    """wave.active_segment where frames without pose can neither be active nor define the rest pose."""
+    ok = _pose_present(x)
+    if not ok.any():
+        return slice(0, len(x))
+    pose = x[:, wave.POSE].reshape(len(x), 33, 4)
+    width = np.abs(pose[ok, 11, 0] - pose[ok, 12, 0])
+    scale = np.median(width[width > 1e-3]) if (width > 1e-3).any() else 1.0
+    rest = np.median(pose[np.where(ok)[0][-3:], :, 1], axis=0)
+    lift = np.maximum(rest[15] - pose[:, 15, 1], rest[16] - pose[:, 16, 1]) / scale
+    lift = np.where(ok, lift, -np.inf)
+    top = lift.max()
+    on = np.where(lift > 0.25 * top)[0] if top > 0 else np.arange(len(x))
+    a, b = max(on.min() - margin, 0), min(on.max() + margin + 1, len(x))
+    return slice(a, b) if b - a >= 8 else slice(0, len(x))
+
+
+def canonical_cfg(x, face_perm, cfg):
+    """Handedness canonicalisation selected by the bundle configuration (default: frozen wave.canonical)."""
+    return canonical_robust(x, face_perm) if cfg.get("pose_robust") else wave.canonical(x, face_perm)

@@ -149,7 +149,7 @@ def main(argv=None):
     item.add_argument("--manifest", type=Path, required=True)
     item.add_argument("--out", type=Path, required=True)
     item = commands.add_parser("iter3-finalfit")
-    item.add_argument("--candidate", choices=["v3_gate13", "v4_contact_bimanual"], default="v4_contact_bimanual")
+    item.add_argument("--candidate", choices=["v3_gate13", "v4_contact_bimanual", "v6_pose_robust"], default="v4_contact_bimanual")
     item.add_argument("--data-root", type=Path, required=True)
     item.add_argument("--manifest", type=Path, required=True)
     item.add_argument("--out", type=Path, required=True)
