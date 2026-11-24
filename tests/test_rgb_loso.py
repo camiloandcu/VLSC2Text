@@ -13,6 +13,17 @@ from lsc5.io import atomic_json, digest, producer_hash, read_json, sha256
 from lsc5.rgb_frames import decode, indices
 
 
+_REAL_TIME = rb.time.time
+
+
+@pytest.fixture(autouse=True)
+def historical_clock(monkeypatch):
+    """The RGB chain had a fixed operational cutoff (22 Nov 2026). Run its tests on a clock two days
+    earlier that still advances, so they stay reproducible after the date; tests may override it."""
+    offset = (rb.CUTOFF - 2 * 86400) - _REAL_TIME()
+    monkeypatch.setattr(rb.time, "time", lambda: _REAL_TIME() + offset)
+
+
 def test_channel_scaler_pyramid_and_heldout_immutability():
     from lsc5.rgb_head import fit_scaler, pyramid
     x = np.random.default_rng(5).normal(size=(4, 16, 384)).astype(np.float32)
