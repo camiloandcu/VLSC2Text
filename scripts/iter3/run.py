@@ -26,14 +26,20 @@ REG={
  'v5_scale':dict(W,gate=1.3,contact=True,bimanual=True,contact_scale='geo'),
  'v5_early_yaw':dict(W,gate=1.3,contact=True,bimanual=True,early=True,yaw_lo=0.5,roll=12.0),
  'v5_all':dict(W,gate=1.3,contact=True,bimanual=True,early=True,yaw_lo=0.5,roll=12.0,contact_scale='geo'),
+ # iteration 6 (pre-registered 24 Nov 2026, docs/04 §23): handedness/active segment ignore frames without pose
+ 'v6_pose_robust':dict(W,gate=1.3,contact=True,bimanual=True,pose_robust=True),
 }
 man=json.load(open(ROOT/'artifacts/cpu-pilot/train_manifest.json'))
 ids,xs,y,S=wave.load_train(ROOT/'data/train',man); perm=np.load(ROOT/'artifacts/wave/face_perm.npy')
-canon=[wave.canonical(x,perm) for x in xs]
-ref=np.load(OUT/'v3_gate13.npz')['probabilities'] if (OUT/'v3_gate13.npz').exists() and any(a.startswith(('v4','v5')) for a in sys.argv[1:]) else np.load(I2/'mlp_velshape_active_viewaug4.npz')['probabilities']
+CANON={}
+def canon_for(cfg):
+    k=bool(cfg.get('pose_robust'))
+    if k not in CANON: CANON[k]=[wi.canonical_cfg(x,perm,cfg) for x in xs]
+    return CANON[k]
+ref=np.load(OUT/'v4_contact_bimanual.npz')['probabilities'] if any(a.startswith('v6') for a in sys.argv[1:]) else np.load(OUT/'v3_gate13.npz')['probabilities'] if (OUT/'v3_gate13.npz').exists() and any(a.startswith(('v4','v5')) for a in sys.argv[1:]) else np.load(I2/'mlp_velshape_active_viewaug4.npz')['probabilities']
 def fit(cfg,fx,fy,fs,seed): return wi.fit_mlp_cfg(fx,fy,fs,seed,hidden=cfg.get('hidden',128),dropout=cfg.get('dropout',0.3),wd=cfg.get('wd',1e-3))
 def run(name):
-    cfg=REG[name]; t=time.time(); rng=np.random.default_rng(123); n=cfg.get('n_aug',0)
+    cfg=REG[name]; t=time.time(); rng=np.random.default_rng(123); n=cfg.get('n_aug',0); canon=canon_for(cfg)
     feats=[wi.features(c,cfg) for c in canon]
     extra=[[wi.features(c,cfg,rng,augment=True) for _ in range(n)] for c in canon]
     def data(idx):
@@ -56,7 +62,7 @@ def run(name):
     r,avg=wave.summarise(per,y,S,ref); r['inner']=inner; r['cfg']={k:(list(v) if isinstance(v,tuple) else v) for k,v in cfg.items()}; r['seconds']=round(time.time()-t)
     np.savez_compressed(OUT/f'{name}.npz',ids=np.array(ids),probabilities=avg)
     log=json.load(open(OUT/'log.json')) if (OUT/'log.json').exists() else {}; log[name]=r; json.dump(log,open(OUT/'log.json','w'),indent=1)
-    print(f"{name:22s} {r['avg_correct']} {r['per_signer']} vsIter2 {r['vs_reference']['per_signer_delta']} seeds {r['seeds']} inner {inner} {r['seconds']}s",flush=True)
+    print(f"{name:22s} {r['avg_correct']} {r['per_signer']} vsRef {r['vs_reference']['per_signer_delta']} seeds {r['seeds']} inner {inner} {r['seconds']}s",flush=True)
 def nested():
     n2=json.load(open(I2/'nested_selection.json'))['inner_scores']; log=json.load(open(OUT/'log.json'))
     cands={k:(v,I2/f'{k}.npz') for k,v in n2.items()}; cands.update({k:(v['inner'],OUT/f'{k}.npz') for k,v in log.items()})

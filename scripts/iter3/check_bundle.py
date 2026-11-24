@@ -1,4 +1,4 @@
-"""New-process verification of the iteration-2 bundle on train NPY (no test access)."""
+"""New-process verification of the iteration-3 bundle on train NPY (no test access)."""
 import json,sys,time,resource,pathlib,numpy as np
 ROOT=pathlib.Path(__file__).resolve().parents[2]; sys.path.insert(0,str(ROOT/'src'))
 from lsc5 import wave_iter
