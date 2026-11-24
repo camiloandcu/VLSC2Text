@@ -67,12 +67,18 @@ def sequence(x, relations=False, handshape=False):
 
 def view_augment(x, rng, yaw_lo=0.7, max_roll=8.0):
     """Simulate camera yaw/roll/zoom on raw image-fraction coordinates of pose and hands (train only)."""
+    yaw = rng.uniform(yaw_lo, 1.0)                    # horizontal foreshortening
+    roll = rng.uniform(-max_roll, max_roll)
+    zoom = rng.uniform(0.85, 1.15)
+    return view_transform(x, yaw, roll, zoom)
+
+
+def view_transform(x, yaw, roll_deg, zoom):
+    """Deterministic camera yaw/roll/zoom about the median shoulder midpoint; missing points stay zero."""
     pose, face, lh, rh = (b.copy() for b in wave.split_blocks(x))
     sh = pose[:, [11, 12], :2]
     c = np.median(sh.reshape(-1, 2), axis=0)
-    yaw = rng.uniform(yaw_lo, 1.0)                    # horizontal foreshortening
-    ang = math.radians(rng.uniform(-max_roll, max_roll))
-    zoom = rng.uniform(0.85, 1.15)
+    ang = math.radians(roll_deg)
     rot = np.array([[math.cos(ang), -math.sin(ang)], [math.sin(ang), math.cos(ang)]])
     for block in (pose, lh, rh):
         nz = (block[..., :2] != 0).any(-1, keepdims=True)
@@ -242,12 +248,15 @@ def jitter_segment(c, rng, max_shift=4):
     return c[a:b]
 
 
-def features(c, cfg, rng=None, augment=False):
-    """Configurable iteration-3 feature builder; augment applies the configured train-only transforms."""
+def features(c, cfg, rng=None, augment=False, view=None):
+    """Configurable iteration-3 feature builder; augment applies the configured train-only transforms and
+    view=(yaw, roll_deg, zoom) a fixed, per-sample camera transform used for test-time averaging."""
     if cfg.get("gate"):
         c = rest_gate(c, low=cfg["gate"])
     if augment and "view" in cfg.get("aug", ()):
         c = view_augment(c, rng, yaw_lo=cfg.get("yaw_lo", 0.7), max_roll=cfg.get("roll", 8.0))
+    elif view is not None and tuple(view) != (1.0, 0.0, 1.0):
+        c = view_transform(c, *view)
     if cfg.get("active"):
         seg = active_segment_robust if cfg.get("pose_robust") else wave.active_segment
         c = jitter_segment(c, rng, cfg.get("jitter", 0)) if (augment and cfg.get("jitter")) else c[seg(c)]
@@ -328,7 +337,10 @@ BUNDLE_V3 = "lsc5_iter3_bundle_v1"
 CANDIDATE_V3 = dict(shape=True, vel=True, active=True, aug=["view"], n_aug=4, gate=1.3)
 CANDIDATE_V4 = dict(CANDIDATE_V3, contact=True, bimanual=True)
 CANDIDATE_V6 = dict(CANDIDATE_V4, pose_robust=True)
-CANDIDATES = {"v3_gate13": CANDIDATE_V3, "v4_contact_bimanual": CANDIDATE_V4, "v6_pose_robust": CANDIDATE_V6}
+TTA_VIEWS = [[1.0, 0.0, 1.0], [0.85, 0.0, 1.0], [0.7, 0.0, 1.0], [1.0, 5.0, 1.0], [1.0, -5.0, 1.0]]   # 04 §24
+CANDIDATE_V7_TTA = dict(CANDIDATE_V4, tta=TTA_VIEWS)
+CANDIDATES = {"v3_gate13": CANDIDATE_V3, "v4_contact_bimanual": CANDIDATE_V4, "v6_pose_robust": CANDIDATE_V6,
+              "v7_tta": CANDIDATE_V7_TTA}
 
 
 def finalfit_v3(train_root, manifest, out, cfg=None, seeds=wave.SEEDS):
@@ -406,9 +418,10 @@ def predict_bundle_v3(bundle_dir, paths, allow_test=False):
     rows = []
     with torch.inference_mode():
         for path in paths:
-            f = features(canonical_cfg(np.asarray(read_sequence(path)), face_perm, cfg), cfg)
-            rows.append(np.mean([torch.softmax(m(torch.from_numpy(((f - mu) / sd).astype(np.float32))[None]), 1).numpy()[0]
-                                 for m, mu, sd in models], 0))
+            c = canonical_cfg(np.asarray(read_sequence(path)), face_perm, cfg)
+            views = cfg.get("tta") or [None]
+            rows.append(np.mean([torch.softmax(m(torch.from_numpy(((features(c, cfg, view=v) - mu) / sd).astype(np.float32))[None]), 1).numpy()[0]
+                                 for v in views for m, mu, sd in models], 0))
     return np.stack(rows)
 
 

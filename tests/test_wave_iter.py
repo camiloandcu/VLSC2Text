@@ -135,3 +135,12 @@ def test_augmentation_is_train_only():
     assert np.array_equal(a, b)
     aug = wave_iter.features(c, wave_iter.CANDIDATE_V4, np.random.default_rng(1), augment=True)
     assert not np.array_equal(a, aug)
+
+
+def test_view_transform_identity_and_tta_default_are_neutral():
+    c = _clip(t=30)
+    assert np.allclose(wave_iter.view_transform(c, 1.0, 0.0, 1.0), c)
+    base = wave_iter.features(c, wave_iter.CANDIDATE_V4)
+    assert np.array_equal(wave_iter.features(c, wave_iter.CANDIDATE_V4, view=[1.0, 0.0, 1.0]), base)
+    assert not np.array_equal(wave_iter.features(c, wave_iter.CANDIDATE_V4, view=[0.7, 0.0, 1.0]), base)
+    assert "tta" not in wave_iter.CANDIDATE_V4
