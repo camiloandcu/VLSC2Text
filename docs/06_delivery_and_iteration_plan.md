@@ -82,7 +82,7 @@ Este calendario sustituye el orientativo del 10 de noviembre. No afirma que se h
 | 23–24 nov 12:00 | Refit, restauración y preparación del bundle; inferencia fija después de congelar. | Usar recuperación prevista o candidato ya validado; preservar integridad. |
 | 24 nov 12:00, objetivo para evaluación 1 | Bundle, CSV, pesos, código y reporte comprobados; efectuar el envío competitivo si está autorizado y la ventana lo permite. | Adelantar si la plataforma tarda en evaluar; no improvisar una baseline para obtener feedback. |
 | 24 nov 18:00, reserva para evaluación 2 | Recuperación técnica si hace falta y las reglas la admiten; preservar concordancia de artefactos. | Si el primero fue correcto, conservarlo sin gastar el intento por obligación. |
-| 25 nov | Entrega por canal/hora confirmados; conservar recibo. | No asumir cierre 23:59 ni extensión. |
+| 25 nov (sustituido: cierre 27 nov, ver §15 y 01 §3) | Entrega por canal/hora confirmados; conservar recibo. | No asumir cierre 23:59 ni extensión. |
 
 Si el piloto indica que el refit supera la reserva, adelantar congelación. La fecha efectiva de retiro Cronos sigue sin confirmar: copiar artefactos al cerrar cada corrida, mantener dependencias restaurables y ensayar continuidad local. No presupuestar sesiones Colab de 16 horas como reserva asegurada.
 

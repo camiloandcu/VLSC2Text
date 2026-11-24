@@ -380,3 +380,18 @@ Errores residuales: M03-sign_02-V02 (brazos extendidos) y M04-sign_05-V02 (varia
 **Candidato:** `bundle_iter4_v1` (`v4_contact_bimanual`). Cifras: 98,49% LOSO a posteriori y 97,99% anidado (07 §17). Objetivo de iteración ≥96,5% anidado: **superado**.
 
 Quedan17 errores dispersos. Seguir iterando tiene un retorno marginal pequeño y un riesgo creciente de sobreajustar el diseño a tres personas. **Propuesta:** congelar este bundle y pasar a la inferencia test y la evaluación1, sujetas a autorización. Respaldos: iter3, iter2, X4+X6 y E01.
+
+
+## 23. Iteración6 · robustez a fotogramas sin pose y criterio preregistrado · 24nov2026
+
+**Motivo.** La revisión independiente del 24nov encontró que `wave.wrist_lift` y `wave.active_segment` tratan un fotograma sin pose (serializado como ceros, y=0) como una muñeca levantada. Con datos sintéticos, quitar la pose en uno de cada tres fotogramas invierte la lateralidad y anula el tramo activo. En train solo hay un fotograma sin pose, en `S02_M02_V01_C02_Clip395`; con el código congelado ese clip de M02 (zurda) no se refleja. No se ha mirado su predicción OOF antes de fijar este criterio.
+
+**Variante única `v6_pose_robust`.** `v4_contact_bimanual` con `pose_robust=True`: lateralidad y tramo activo ignoran los fotogramas sin pose. Es idéntica a iter4 cuando todos los fotogramas tienen pose; cambian los rasgos de 1 de los 1125 clips. Mismo LOSO 750/375, semillas 17/29/43, puntuación interna con semilla 17 y augmentación con rng 123.
+
+**Regla de adopción, fijada antes de correr.** Adoptar `v6_pose_robust` solo si se cumplen las tres condiciones:
+
+- (a) los rasgos difieren de iter4 en como máximo 1 clip train (comprobación label-free);
+- (b) LOSO con promedio de semillas ≥ 1108/1125;
+- (c) ninguna persona baja frente a iter4 (373/368/367).
+
+Si no se cumple alguna, se conserva `bundle_iter4_v1`. El estimado anidado sobre las 24 variantes más esta se reporta como información, no como condición. Si se adopta, se hace finalfit, verificación en proceso nuevo y freeze del nuevo bundle antes de cualquier inferencia test.

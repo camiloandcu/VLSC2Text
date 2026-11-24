@@ -39,7 +39,7 @@ Una solicitud CPU de 4 CPU, 32 G y un minuto pasó `sbatch --test-only`. Esto va
 
 ## 3. Conexión y directorios
 
-La conexión SSH desde la terminal local funcionó. Dirección, puerto, usuario y contraseña se conservan fuera del proyecto en `~/.config/latamiachallenge/cronos.env`, con permisos `600` y directorio `700`. No deben copiarse a documentación pública, comandos registrados, argumentos de contraseña o Git. El archivo contiene valores literales y no se ejecuta con `source`.
+La conexión SSH desde la terminal local funcionó. Dirección, puerto, usuario y contraseña se conservan fuera del proyecto, en un archivo de configuración privado de la máquina local con permisos `600` y directorio `700`. No deben copiarse a documentación pública, comandos registrados, argumentos de contraseña o Git. El archivo contiene valores literales y no se ejecuta con `source`.
 
 El reloj del servidor reportó desfase UTC−03:00, dos horas por delante de Bogotá. Se debe conservar el desfase en la evidencia de corridas y distinguirlo de la zona del cierre del reto.
 
@@ -110,7 +110,7 @@ El acceso funcionó el 19 y20 de noviembre, después de la ventana pública orig
 
 ## 6. Procedencia y límites
 
-Fuentes primarias: *Manual de usuario · Servidor EMC2 (cronos) · Grupos de estudiantes*, versión 1.1 del 16 de noviembre de 2026, secciones 3–7; `LEEME.txt` de la cuenta; configuración y respuestas del sistema consultadas el 19 de noviembre. Evidencia bruta privada en `~/.config/latamiachallenge/cronos_inspection_2026-11-19.txt` y `cronos_followup_2026-11-19.txt`, fuera del repositorio.
+Fuentes primarias: *Manual de usuario · Servidor EMC2 (cronos) · Grupos de estudiantes*, versión 1.1 del 16 de noviembre de 2026, secciones 3–7; `LEEME.txt` de la cuenta; configuración y respuestas del sistema consultadas el 19 de noviembre. La evidencia bruta de la inspección y del seguimiento se conserva en privado, fuera del repositorio.
 
 La inspección inicial creó únicamente archivos locales de autenticación, clave de host y evidencia; no modificó configuraciones remotas ni inició entrenamiento. Los incrementos posteriores autorizados sí transfieren código/cachés privados y ejecutan trabajos CPU, con evidencia en sus ítems. El estado operativo y los permisos pueden cambiar; antes de aprovechar una habilitación GPU futura se deben volver a comprobar la política, el acceso al dispositivo y el entorno.
 

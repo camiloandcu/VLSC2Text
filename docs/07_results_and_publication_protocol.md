@@ -501,3 +501,25 @@ La verificación previa ya debilitó la hipótesis de escala: el ancho de hombro
 **Lectura.** El aumento de vista más amplio sube el puntaje interno, que se entrena con una sola persona, pero empeora con dos. Ese puntaje es un proxy débil cuando el aumento compensa escasez de datos. Ninguna variante supera a iter4 en LOSO.
 
 **Cierre.** Se termina la iteración de rasgos.
+
+## 19. Revisión independiente e iteración6 · negativa, se mantiene iter4 · 24nov2026
+
+**Revisión.** Un revisor independiente auditó validación, contrato de inferencia, código, reporte e higiene del repositorio. Las cifras del reporte coinciden con las recalculadas desde el OOF guardado. El bundle `bundle_iter4_v1` se restaura con el código actual con diferencia2,5e-11. Las correcciones aplicadas fueron:
+
+- dos pruebas RGB que dependían del reloj real (corte del 22nov) ahora usan un reloj histórico;
+- prueba de extremo a extremo `finalfit_v3`→`predict_bundle_v3`→CSV;
+- estimados anidados guardados por separado: `nested_ties_24.json` (24 variantes, 1102,3 = 97,99%), `nested_ties_29.json` (con iter5, 1108 = 98,49%) y `nested_ties_25_v6.json`;
+- correcciones del reporte (descripción del anidado, control de fuga, comando de reproducción, orden del pipeline y referencias).
+
+**Control de fuga con el pipeline final.** Etiquetas permutadas dentro de cada persona de ajuste, `v4_contact_bimanual`, semillas17/29/43: **134/1125 (11,9%)**, M02 52, M03 41, M04 41. Umbral fijado antes de correr: ≤25%. Pasa. Sustituye al control X4 (13,4%) como evidencia para el modelo final. Solo descarta fugas del código o del protocolo; no descarta atajos de sesión.
+
+**Iteración6 · `v6_pose_robust`**, con la regla preregistrada en04 §23 (hash `e7ca7184…` en `artifacts/iter3/prereg_iter6.json`, escrito antes de correr).
+
+| Variante | Aciertos | Accuracy | M02/M03/M04 | Semillas | Suma interna |
+|---|---:|---:|---|---|---:|
+| `v4_contact_bimanual` (referencia) | **1108** | **98,49%** | 373/368/367 | 1104/1107/1109 | 2101 |
+| `v6_pose_robust` | 1105 | 98,22% | 374/365/366 | 1105/1104/1108 | 2104 |
+
+(a) Se cumple: cambian los rasgos de 1 clip (`S02_M02_V01_C02_Clip395`, que el código congelado no reflejaba). (b) No se cumple: 1105 < 1108. (c) No se cumple: M03 −3 y M04 −1. **Se mantiene `bundle_iter4_v1`.**
+
+**Lectura.** Cambiar un solo clip de entrenamiento mueve el LOSO en ±3–4 clips por persona, lo mismo que el rango entre semillas (1104–1109). Diferencias de ese tamaño son ruido. La fragilidad ante fotogramas sin pose queda documentada como riesgo residual para la persona de test; en train afecta a 1 de 63.284 fotogramas.

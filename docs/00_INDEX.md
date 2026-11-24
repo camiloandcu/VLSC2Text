@@ -1,6 +1,6 @@
 # LatAm IA Challenge · Índice del proyecto
 
-Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada; iteración4 completada: candidato v4_contact_bimanual con 98,49% LOSO (97,99% anidado); bundle iter4 verificado; iteración5 negativa (ninguna variante supera 1108; criterio por persona no cumplido); se mantiene iter4 congelado; cierre 27nov**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
+Actualizado el 20 de noviembre de 2026. Etapa actual: **E07 completo; E08 cerrada negativamente; corrección local verificada; iteración4 completada: candidato v4_contact_bimanual con 98,49% LOSO (97,99% anidado); bundle iter4 verificado; iteración5 negativa (ninguna variante supera 1108; criterio por persona no cumplido); revisión independiente e iteración6 negativa (07 §19); se mantiene iter4 congelado y sin enviar; cierre 27nov**. Modo: **Showcase**, con rigor científico y las puertas de revisión ya establecidas. Código y documentación integrados en `main` de GitHub; PR1 fusionado. Los endpoints locales citados en cierres anteriores describen su estado histórico.
 
 ## Etapas y autorización vigente
 
@@ -31,7 +31,7 @@ El usuario confirmó después dos evaluaciones y que cuenta la última; desconoc
 
 | Tema | Registro autoritativo |
 |---|---|
-| Objetivo, reglas, cierre y preguntas externas | [01](01_problem_definition.md). Cierre comunicado: 25 nov, Bogotá; hora/canal pendientes. |
+| Objetivo, reglas, cierre y preguntas externas | [01](01_problem_definition.md). Cierre: 27 nov, Bogotá, reconfirmado por el usuario el 24 nov; hora/canal pendientes. |
 | Datos y alcance de las comprobaciones | [02](02_data_audit_public.json). Test reservado a inferencia fija; datos de solo lectura. |
 | Literatura y sus límites | [03](03_state_of_art.md), biblioteca pública enlazada desde allí. Citas por DOI o referencia primaria. |
 | Alternativas, recetas, LOSO, promoción y semillas | [04 R2.1](04_solution_and_experiment_design.md). §§11–12 poseen mejora, escalamiento y evaluaciones; conserva el catálogo R2. |
@@ -105,7 +105,7 @@ La pareja 50/50 predefinida no se promueve ni con E08 provisional (M03 −12) ni
 
 Siguiente incremento propuesto: [camino de entrega E01](../openspec/changes/archive/2026-11-20-e01-delivery-path/proposal.md), con AC D1–D7 y admisión en06 §14. Cubre E13 (semillas 29/43), refit E14, bundle, predictor y validador del CSV, todo solo con train. No está autorizado: requiere aprobación humana. La opción B de04 §16 (enmendar la regla de la pareja para E01+E08) es una decisión humana separada y post hoc. No existe todavía ningún camino de entrega; freeze, test y evaluaciones requieren un alcance propio. R1/ROI siguen bloqueadas. USD10 sin gastar; dos evaluaciones intactas.
 
-**Acceso local privado.** Datos, entornos, artefactos y textos completos no viajan con GitHub. Otra sesión en esta misma máquina conserva esos recursos. SSH usa `~/.config/latamiachallenge/cronos.env` y hostkey fijada; consultar08 y helpers privados sin imprimir secretos. No relanzar `rgb_loso_sequence.py`: agotó su intento y no es un mecanismo de recuperación. Si se trabaja desde otra máquina, detener ejecución hasta obtener los recursos privados por un canal acordado; el repositorio público por sí solo no reproduce los resultados medidos.
+**Acceso local privado.** Datos, entornos, artefactos y textos completos no viajan con GitHub. Otra sesión en esta misma máquina conserva esos recursos. SSH usa credenciales y hostkey fijada guardadas fuera del repositorio; consultar08 y helpers privados sin imprimir secretos. No relanzar `rgb_loso_sequence.py`: agotó su intento y no es un mecanismo de recuperación. Si se trabaja desde otra máquina, detener ejecución hasta obtener los recursos privados por un canal acordado; el repositorio público por sí solo no reproduce los resultados medidos.
 
 **Publicación solicitada.** Usuario solicitó publicar en `camiloandcu/VLSC2Text` con commits pequeños por cambios reales, conservando autoría/fechas y exclusiones privadas. Preparación y verificación autorizadas; método terminalGit/CLI consultado antes de usar la cuenta. No confundir publicación del código con autorización para reintentarGPU, gastar o enviar predicciones oficiales. Usuario autorizó crear o pushear `main`; la publicación se integró mediante PR1. La rama vigente de continuidad es `main`.
 
@@ -151,3 +151,4 @@ Detalle en07 §16 y decisión/criterio de parada en04 §21. Freeze, inferencia t
 
 Detalle en07 §17 y propuesta de freeze en04 §22. **Siguiente acción: autorizar freeze de `bundle_iter4_v1`, inferencia test, validación del CSV y evaluación1.**
 
+**Revisión independiente e iteración6, 24nov2026 («apruebo las 6 cosas»).** Cierre reconfirmado: 27nov; bundle aún sin enviar. Control de fuga del pipeline final 11,9%; `v6_pose_robust` 1105, no adoptada por la regla preregistrada de04 §23. Pruebas corregidas y ampliadas; reporte corregido. Detalle en07 §19. **Siguiente acción: freeze de `bundle_iter4_v1`, inferencia test autorizada, validación del CSV y evaluación1.**
