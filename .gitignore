@@ -43,3 +43,8 @@ docs/private
 # Detailed sample audit and supplied manual remain local.
 /docs/02_data_audit.json
 /docs/Manual_LSC5.md
+
+# Live demo: vendored MediaPipe files and LSC5-derived guide data stay local.
+/demo/static/vendor/
+/demo/static/private/
+/.impeccable/

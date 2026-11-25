@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f7f4">
+<title>Seña a seña</title>
+<link rel="stylesheet" href="/static/style.css?v=12">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 018 0v3"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v15M6 13l6 6 6-6"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 20V5M6 11l6-6 6 6"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/><path d="M20 4v16"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><path d="M8 13V5.5a1.5 1.5 0 013 0V11M11 10V4a1.5 1.5 0 013 0v7M14 10.5V5.5a1.5 1.5 0 013 0V14c0 4-2.5 7-6.5 7S5 18.5 4 16l-1.2-3a1.5 1.5 0 012.6-1.4L8 14"/></symbol>
+    <symbol id="i-hands" viewBox="0 0 24 24"><path d="M6 13V7.5a1.3 1.3 0 012.6 0V12M18 13V7.5a1.3 1.3 0 00-2.6 0V12M6 13c0 3 1.5 5 4 6M18 13c0 3-1.5 5-4 6"/></symbol>
+    <symbol id="i-question" viewBox="0 0 24 24"><path d="M9 9a3 3 0 115 2.2c-1.2.8-2 1.5-2 2.8"/><path d="M12 18h.01"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-redo" viewBox="0 0 24 24"><path d="M4 12a8 8 0 108-8H8"/><path d="M10 1.5L7.5 4 10 6.5"/></symbol>
+    <symbol id="i-skip" viewBox="0 0 24 24"><path d="M5 5l9 7-9 7z"/><path d="M19 5v14"/></symbol>
+    <symbol id="i-bones" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><path d="M7 10h10M12 10v6M8 21l4-5 4 5M7 10l-2 5M17 10l2 5"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></symbol>
+    <symbol id="i-bones-off" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><path d="M7 10h10M12 10v6M8 21l4-5 4 5M7 10l-2 5M17 10l2 5"/><path d="M3 3l18 18"/></symbol>
+    <symbol id="i-speed" viewBox="0 0 24 24"><path d="M3.5 17a9 9 0 1117 0"/><path d="M12 14l4.5-5"/><circle cx="12" cy="14.5" r="1.4"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-far" viewBox="0 0 24 24"><path d="M9 9L4 4M4 9V4h5M15 15l5 5M20 15v5h-5M15 9l5-5M15 4h5v5M9 15l-5 5M9 20H4v-5"/></symbol>
+    <symbol id="i-near" viewBox="0 0 24 24"><path d="M4 4l5 5M9 4v5H4M20 20l-5-5M15 20v-5h5M20 4l-5 5M20 9h-5V4M4 20l5-5M4 15h5v5"/></symbol>
+    <symbol id="i-center" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3"/></symbol>
+  </defs>
+</svg>
+
+<!-- Inicio -->
+<section id="intro" class="screen intro" aria-labelledby="introTitle">
+  <header class="brand">Seña a seña</header>
+  <div class="intro-body">
+    <div class="intro-copy">
+      <h1 id="introTitle">Aprende cinco señas de la LSC</h1>
+      <p>Mira cómo se hace cada una, inténtala frente a la cámara y te decimos qué corregir.</p>
+    </div>
+    <figure class="scene" aria-hidden="true">
+      <svg viewBox="0 0 300 190">
+        <rect x="96" y="10" width="108" height="172" rx="16" fill="#0f2a44"/>
+        <rect x="103" y="22" width="94" height="148" rx="8" fill="#1a232d"/>
+        <rect x="111" y="30" width="78" height="132" rx="6" fill="none" stroke="#8fd0c4" stroke-width="2" stroke-dasharray="5 5"/>
+        <g fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="150" cy="58" r="12"/><path d="M128 84 L172 84 L168 150 L132 150 Z"/>
+          <path d="M128 84 L120 118 L138 106"/><path d="M172 84 L180 118 L162 106"/>
+        </g>
+        <circle cx="120" cy="118" r="4" fill="#8fd0c4"/><circle cx="180" cy="118" r="4" fill="#8fd0c4"/>
+        <path d="M120 150 H70" stroke="#0f2a44" stroke-width="2"/><text x="20" y="154" font-size="14" font-weight="800" fill="#0f2a44">cintura</text>
+        <path d="M184 118 H226" stroke="#0f2a44" stroke-width="2"/><text x="232" y="122" font-size="14" font-weight="800" fill="#0f2a44">codos</text>
+      </svg>
+    </figure>
+    <ol class="steps">
+      <li><span>1</span>Apoya el celular contra algo, a la altura del pecho</li>
+      <li><span>2</span>Aléjate hasta que se vean tu cintura y tus codos</li>
+      <li><span>3</span>Empieza con las manos abajo, haz la seña una sola vez y vuelve a bajarlas</li>
+    </ol>
+    <p class="privacy"><svg class="i"><use href="#i-lock"/></svg>Tu video no sale de este dispositivo.</p>
+    <div class="intro-actions">
+      <button id="start" class="btn go" type="button">Empezar <svg class="i"><use href="#i-arrow"/></svg></button>
+      <button id="restart" class="btn ghost" type="button" hidden>Empezar de nuevo</button>
+    </div>
+  </div>
+</section>
+
+<!-- Práctica -->
+<section id="practice" class="screen practice" hidden aria-label="Práctica">
+  <div class="top">
+    <p id="count" class="count">Seña 1 de 5</p>
+    <div class="line-wrap">
+      <ol id="line" class="line" aria-label="Progreso"></ol>
+      <p class="where"><span id="whereLeft">Seña 1 de 5</span><span id="whereRight">Repaso al final</span></p>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <h1 id="signName">Café</h1>
+    <p id="signKey" class="key">Una mano, en pinza, frente a la boca</p>
+  </div>
+
+  <div id="stage" class="stage" data-state="idle">
+    <video id="video" playsinline muted></video>
+    <canvas id="overlay"></canvas>
+    <figure id="insetGuide" class="inset-guide">
+      <figcaption>Así se hace</figcaption>
+      <canvas width="296" height="344"></canvas>
+    </figure>
+    <p id="chip" class="chip" hidden></p>
+    <div id="msg" class="msg" role="status" aria-live="polite">
+      <span class="ic"><svg class="i"><use id="msgIcon" href="#i-hand"/></svg></span>
+      <div><h2 id="msgTitle">Preparando la cámara</h2><p id="msgText">Un momento</p><small id="msgSmall" hidden></small></div>
+    </div>
+    <div id="hintSheet" class="hint-sheet" hidden>
+      <div class="sheet-head"><h2>Pistas</h2><button id="closeHints" class="icon-btn" type="button" aria-label="Cerrar pistas"><svg class="i"><use href="#i-x"/></svg></button></div>
+      <ul class="hints"></ul>
+      <button id="skel2" class="btn ghost sheet-toggle" type="button" aria-pressed="true"><svg class="i"><use href="#i-bones"/></svg>Esqueleto sobre tu imagen: sí</button>
+    </div>
+  </div>
+
+  <aside class="side">
+    <figure id="sideGuide" class="side-guide">
+      <figcaption>Así se hace</figcaption>
+      <canvas width="440" height="420"></canvas>
+    </figure>
+    <ul id="sideHints" class="hints side-hints"></ul>
+    <p class="side-note">En el repaso no hay guía. Si la necesitas, toca «Ver guía».</p>
+  </aside>
+
+  <div class="foot">
+    <button id="timer" class="btn ghost compact" type="button" ><svg class="i"><use href="#i-timer"/></svg>Grabar en 3 s</button>
+    <button id="skel" class="btn ghost compact" type="button" aria-pressed="true" aria-label="Esqueleto sobre tu imagen" title="Esqueleto sobre tu imagen"><svg class="i"><use href="#i-bones"/></svg><span class="skel-label">Esqueleto</span></button>
+    <button id="secondary" class="btn ghost" type="button">Ver pistas</button>
+    <button id="primary" class="btn go" type="button" hidden>Siguiente seña <svg class="i"><use href="#i-arrow"/></svg></button>
+  </div>
+</section>
+
+<!-- Cambio de etapa -->
+<section id="stageScreen" class="screen result stage-screen" hidden aria-labelledby="stageTitle">
+  <header class="brand">Seña a seña</header>
+  <div class="result-body">
+    <div class="stage-mark" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><b></b>
+    </div>
+    <h1 id="stageTitle">¡Aprendiste las cinco señas!</h1>
+    <p id="stageLead" class="lead">Ahora viene el repaso, para ver si te quedaron.</p>
+    <ul class="rules">
+      <li><svg class="i"><use href="#i-skip"/></svg>Te pido las cinco en desorden</li>
+      <li><svg class="i"><use href="#i-eye"/></svg>Sin video guía, aunque puedes verlo si lo necesitas</li>
+      <li><svg class="i"><use href="#i-redo"/></svg>Tienes dos intentos por seña</li>
+      <li><svg class="i"><use href="#i-hand"/></svg>Igual que antes: hazla una sola vez y baja las manos</li>
+    </ul>
+    <div class="intro-actions">
+      <button id="backLessons" class="btn ghost" type="button">Volver a practicar</button>
+      <button id="beginReview" class="btn go" type="button">Empezar el repaso <svg class="i"><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- Resultado -->
+<section id="result" class="screen result" hidden aria-labelledby="scoreTitle">
+  <header class="brand">Seña a seña</header>
+  <div class="result-body">
+    <p class="big"><b id="scoreNum">5</b><span>de 5</span></p>
+    <h1 id="scoreTitle">¡Te salieron todas!</h1>
+    <ul id="scoreList" class="score-list"></ul>
+    <div class="intro-actions">
+      <button id="again" class="btn ghost" type="button">Repetir repaso</button>
+      <button id="practiceMiss" class="btn go" type="button">Practicar</button>
+    </div>
+  </div>
+</section>
+
+<script src="/static/vendor/holistic/holistic.js"></script>
+<script src="/static/app.js?v=12"></script>
+</body>
+</html>
