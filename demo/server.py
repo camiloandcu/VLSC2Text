@@ -10,6 +10,7 @@ Environment:
     LSC5_PASSWORD        when set, every page and API call requires this password (cookie after login)
     LSC5_THRESHOLD       minimum confidence before answering (default 0.7)
 """
+import gzip
 import hashlib
 import hmac
 from urllib.parse import parse_qs
@@ -126,7 +127,15 @@ def config():
 
 
 @app.post("/api/predict")
-def predict(clip: Clip):
+async def predict(request: Request):
+    # The page gzips the landmarks (about 3 times smaller) when the browser supports CompressionStream.
+    body = await request.body()
+    if request.headers.get("content-encoding") == "gzip":
+        body = gzip.decompress(body)
+    try:
+        clip = Clip.model_validate_json(body)
+    except ValueError as e:
+        raise HTTPException(422, "Invalid clip") from e
     if len(clip.t) != len(clip.frames) or any(len(f) != 1662 for f in clip.frames):
         raise HTTPException(422, "Expected (T,1662) landmarks with T timestamps")
     t0 = time.perf_counter()

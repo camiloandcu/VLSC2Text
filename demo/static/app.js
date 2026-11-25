@@ -389,8 +389,14 @@
     message('idle', 'i-eye', 'Revisando', ''); hideMessage(false); setState('idle');
     let r = null;
     try {
-      const res = await fetch('/api/predict', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ frames: clip.frames.map((f) => f.row), t: clip.frames.map((f) => f.t), target }) });
+      const json = JSON.stringify({ frames: clip.frames.map((f) => f.row), t: clip.frames.map((f) => f.t), target });
+      const headers = { 'Content-Type': 'application/json' };
+      let body = json;
+      if (window.CompressionStream) {
+        body = await new Response(new Blob([json]).stream().pipeThrough(new CompressionStream('gzip'))).blob();
+        headers['Content-Encoding'] = 'gzip';
+      }
+      const res = await fetch('/api/predict', { method: 'POST', headers, body });
       if (!res.ok) throw new Error(String(res.status));
       r = await res.json();
     } catch (e) {
