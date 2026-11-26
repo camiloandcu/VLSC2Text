@@ -1,6 +1,8 @@
 # LatAm IA Challenge - Índice del proyecto
 
-Estado actual: **modelo `v4_contact_bimanual` fijado; entrega preparada y reproducida localmente; presentación de portafolio completada y verificada localmente en `docs/portfolio-presentation`; sin envío ni puntuación oficial confirmados**. Modo: **Showcase**, con rigor científico y las puertas de revisión establecidas. La autorización más reciente se registra al final de este índice; las secciones por fecha conservan su estado histórico. El cierre comunicado del reto es el 27 de noviembre, con hora y canal por confirmar.
+Estado actual: **modelo `v4_contact_bimanual` fijado; entrega y presentación de portafolio verificadas localmente; contexto de producto y pitch preparado localmente en `docs/portfolio-presentation`; sin envío ni puntuación oficial confirmados**. Modo: **Showcase**, con rigor científico y las puertas de revisión establecidas. La autorización más reciente se registra al final de este índice; las secciones por fecha conservan su estado histórico. El cierre comunicado del reto es el 27 de noviembre, con hora y canal por confirmar.
+
+Para continuar hacia el pitch: leer [10, contexto de producto](10_product_and_pitch_context.md), [README](../README.md) y [demo](../demo/README.md); consultar resultados y arquitectura por sus enlaces. La tabla de etapas siguiente conserva el recorrido técnico del reto. El nuevo frente prepara problema de uso, experiencia y negocio; no acredita demanda ni reinicia experimentos.
 
 ## Etapas y autorización vigente
 
@@ -39,12 +41,15 @@ El usuario confirmó después dos evaluaciones y que cuenta la última; desconoc
 | Caja/consumo, CPU acumulada, calendario y trabajo | [06 R2.1](06_delivery_and_iteration_plan.md). §9 posee operación de evaluaciones. Ledger privado único activo en Cronos; ubicación y copia de evidencia en08. |
 | Evidencia, interpretación y publicación | [07](07_results_and_publication_protocol.md). [Reporte técnico público en PDF](09_reporte_tecnico.pdf), con alcance y límites experimentales. |
 | Infraestructura comprobada y límites de acceso | [08](08_compute_operations.md). Retiro Cronos y disponibilidad futura pendientes. |
+| Producto, problema de uso y preparación del pitch | [10](10_product_and_pitch_context.md). Experiencia existente, hipótesis de valor y venta, evidencia disponible y decisiones de arranque. |
 
 ## Foco y siguiente acción
 
-**Incremento cerrado localmente:** presentación de portafolio aprobada en `docs/portfolio-presentation`. README, demo, metadatos, notebook público, PDF y navegación preparados y revisados; los cambios anteriores de entrega se conservan. Autoría técnica individual confirmada por el usuario; evaluación de alternativas realizada con el equipo, según su aclaración posterior.
+**Incremento técnico y de portafolio cerrado localmente:** README, demo, metadatos, notebook público, PDF y navegación preparados y revisados en `docs/portfolio-presentation`; los cambios anteriores de entrega se conservan. Autoría técnica individual confirmada por el usuario; evaluación de alternativas realizada con el equipo, según su aclaración posterior.
 
-**Siguiente acción:** revisión de la presentación local por el usuario. Las comprobaciones y la revisión independiente del alcance están cerradas; no queda desarrollo de modelo ni demo pendiente en este incremento. Publicación remota y envío competitivo permanecen fuera del alcance autorizado.
+**Frente vigente:** contexto documental de producto y pitch preparado, dentro del alcance aprobado para esta misma rama: AGENTS, este índice, aclaración del encuadre original en 01 y nuevo contexto 10. El siguiente trabajo es encuadre de producto apoyado en un prototipo existente; no hay selección comercial ni validación educativa aprobadas por ese solo hecho.
+
+**Siguiente acción:** en el próximo chat, precisar audiencia, objetivo, formato y solicitud del pitch, y trabajar el argumento desde 10. Los insumos y sus comprobaciones documentales están cerrados; las verificaciones técnicas previas se conservan. Publicación remota y envío competitivo permanecen fuera del alcance autorizado.
 
 ### Contexto histórico de R2.1
 
@@ -176,3 +181,5 @@ Detalle en07 §17 y propuesta de freeze en04 §22. **Siguiente acción: autoriza
 **Aclaración de presentación y reporte público.** El usuario confirmó que el equipo evaluó varios modelos y que este fue el mejor de los comparados, y autorizó incluir el reporte. Se conserva la atribución del trabajo técnico individual y se reconoce la evaluación conjunta. Prefirió la figura 6, anonimizada, para explicar la aplicación; se incorpora con cámara y respuestas identificadas como simuladas. No se añaden permisos generales para distribuir el dataset. La edición pública del PDF acota las conclusiones y el control de etiquetas barajadas a lo que sostienen los resultados; no modifica el reporte ni el ZIP de competición.
 
 **Cierre local de presentación, 26 nov 2026.** README, demo, notebook público, PDF, metadatos y navegación integrados en `docs/portfolio-presentation`. Revisión independiente del estado final conforme; suite completa: 60 pruebas en 125,16 s, tras repetir con éxito la prueba que había fallado antes del apagado. OpenSpec estricto: 7/7; 194 enlaces locales y JSON público conformes. Refit idéntico byte a byte, 375 predicciones reproducidas y API local comprobada. La figura 6 anonimizada se conserva con sus estados simulados identificados; datos, pesos y activos originales siguen privados. Evidencia detallada y límites en 07 §22. El PDF público y el ZIP conservan los hashes registrados allí y en este índice. Endpoint local listo para revisión; sin push, publicación ni envío competitivo.
+
+**Preparación de producto y pitch, 26 nov 2026.** El usuario aprobó el alcance de cuatro archivos y su ejecución en la misma rama `docs/portfolio-presentation`, sobre la base técnica y de portafolio del commit `45d4038`. AGENTS incorpora problema, experiencia, valor, comprador, venta y evidencia; 10 conserva las hipótesis y pendientes de producto, mientras 01 mantiene las reglas del reto y el índice conserva autorización y siguiente acción. Contexto preparado para iniciar el próximo chat; audiencia, formato, oferta comercial y solicitud del pitch siguen por definir. Comprobaciones focales: 222 enlaces locales conformes, OpenSpec estricto 7/7, JSON público válido, alcance de cuatro archivos y revisión de coherencia y ausencia de credenciales conformes. No se repitió la suite de entrenamiento e inferencia: este incremento modifica solo documentación y conserva su pase previo de 60 pruebas. Preparación local completada, sin elaborar ni presentar un pitch final.

@@ -4,9 +4,11 @@ Encuadre y reglas consultados el 10 de noviembre de 2026, America/Bogota; recurs
 
 Continuación autorizada: la investigación de la etapa 2 se encuentra en [03_state_of_art.md](03_state_of_art.md), con fuentes y método en [literature/README.md](../literature/README.md). Las exclusiones de investigación de este documento describen el alcance de la etapa 1.
 
+**Lectura actual para producto y pitch.** Este documento conserva el problema original de competición, las reglas y los límites de los datos. La prioridad de ranking y los entregables de esa etapa no definen por sí solos una necesidad de usuarios o compradores. El [contexto de producto](10_product_and_pitch_context.md) reúne el problema de uso propuesto, la experiencia existente y las hipótesis de valor y venta; la evidencia técnica actual pertenece a [07](07_results_and_publication_protocol.md#lectura-rápida-del-resultado-actual). La demo se incorporó después del encuadre original. Las decisiones y autorizaciones vigentes se consultan en el [índice](00_INDEX.md).
+
 ## 1. Lectura y autoridad de las fuentes
 
-Este documento es el registro canónico del encuadre, las aclaraciones y los pendientes. La evidencia numérica detallada está en [02_data_audit.json](02_data_audit_public.json). No duplicar estos registros en nuevos resúmenes o historiales.
+Este documento es el registro canónico del encuadre del reto, sus reglas y los pendientes sobre datos y competición. Las hipótesis de uso y negocio pertenecen a 10. La evidencia numérica detallada está en [02_data_audit.json](02_data_audit_public.json). No duplicar estos registros en nuevos resúmenes o historiales.
 
 | Fuente | Alcance y autoridad |
 |---|---|
