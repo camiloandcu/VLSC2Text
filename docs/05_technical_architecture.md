@@ -1,6 +1,6 @@
-# 05 · Arquitectura técnica propuesta · revisión R2.1
+# 05 - Arquitectura técnica e interfaces implementadas
 
-Diseño del 19 de noviembre de 2026. El [protocolo R2.1](04_solution_and_experiment_design.md) posee recetas, selección y límites de ajustes; [06](06_delivery_and_iteration_plan.md) posee presupuesto monetario, ejecución y calendario. Este documento posee contratos e interfaces. Los incrementos CPU implementan el piloto y la línea base LOSO R0/MLP; la arquitectura restante conserva su alcance de diseño. Autorización y evidencia en00/ítem OpenSpec.
+Diseño del 19 de noviembre de 2026. El [protocolo R2.1](04_solution_and_experiment_design.md) posee recetas, selección y límites de ajustes; [06](06_delivery_and_iteration_plan.md) posee presupuesto monetario, ejecución y calendario. Este documento posee contratos e interfaces. El diseño R2.1 y los cierres de sus incrementos se conservan como historia. La implementación actual también incluye el candidato v4, inferencia CSV, una API y la demo con cámara; consulta [§17](#17-implementación-actual-y-rutas-de-reproducción) para sus rutas y fronteras. Las secciones históricas no describen por sí solas el estado actual. Autorización y evidencia en el índice y los ítems OpenSpec.
 
 ## 1. Decisiones y límites
 
@@ -17,7 +17,7 @@ Se construirá un paquete Python offline, con CLI y lanzadores delgados para Slu
 | ADR-07 | Presupuesto por corrida y por proyecto, fuera del modelo. | Una métrica no habilita recargas ni supera el límite de caja; reservas y permisos se comprueban antes de lanzar. |
 | ADR-08 | Bundle final independiente de proveedor y del caché train. | Ejecutar con video/landmarks de una muestra y pesos propios; ensayar CPU/local antes de congelar. |
 
-Estas son decisiones de arquitectura propuestas. No se añade UI, API, despliegue público ni entrenamiento distribuido. Los entregables de competición y el aislamiento del test se heredan de [01](01_problem_definition.md).
+Estas son decisiones de arquitectura propuestas en R2.1. Ese incremento no añadía UI, API, despliegue público ni entrenamiento distribuido; la demo y API incorporadas posteriormente se describen en §17. Los entregables de competición y el aislamiento del test se heredan de [01](01_problem_definition.md).
 
 ## 2. Flujo y responsabilidades
 
@@ -221,7 +221,7 @@ El origen de la semántica y la selección está en 01/04; el contrato de transp
 Quedan por validar el esquema anatómico, decoder remoto, rendimiento de recetas completas/visuales, compatibilidad de peso/API y condiciones de la cuenta externa. El piloto R0 solo mide este perfil y entorno; su evidencia pertenece al ítem, sin extrapolar accuracy o throughput a otras arquitecturas. La autorización SSH de Cronos está concedida; no se extiende por sí sola a otro proveedor. Cada incremento conserva revisión de fundación/propuesta y verificación conforme a su alcance.
 
 
-## 12. Verificación de procedencia anatómica · 19 nov2026
+## 12. Verificación de procedencia anatómica - 19 nov2026
 
 El siguiente incremento fue autorizado para verificar el contrato y habilitar E02 solo si se acredita R1. Resultado inicial: **contrato todavía no acreditado**. El manual §3 enumera pose132/rostro1404/manos63+63, pero introduce la forma con «Si el archivo sigue esta disposición». La auditoría02 ya establece que no se validó el extractor y que bloques cero observados no prueban ausencia de detección. No se encontró su implementación en el código disponible.
 
@@ -230,7 +230,7 @@ La [documentación primaria de MediaPipe Holistic](https://chuoling.github.io/me
 Pendiente: código o especificación del productor que determine orden/intercalado, lateralidad y posibles espejados, unidades, salidas elegidas y política para detecciones faltantes. Contrastar después con train y correspondencia visual; no inferir que una hipótesis es cierta porque produce figuras o accuracy plausibles. El usuario confirmó que solo se dispone del manual y los datos; considera posible solicitar detalles, sin plazo acreditado. No se contactó a organizadores. R1/ROI y TCN anatómica siguen condicionadas; R0 permanece válida. No se entrenaron modelos nuevos en esta comprobación inicial.
 
 
-## 13. Contrato de continuidad temporal opaca · R2.2
+## 13. Contrato de continuidad temporal opaca - R2.2
 
 R2.2/04 §13 fue aprobada por el usuario. La implementación añade un perfil independiente `opaque_sequence_v1`, sin modificar `raw_stats_v2` ni modelos previos. Caché determinista por clip con T original y1662 columnas; sin escalado global. Producer/schema/hash/IDs y publicación atómica siguen los contratos existentes. El nuevo estado aprendido por fold registra1662 medias/desviaciones, definición de ponderación por frame y hashes de fit IDs. La transformación se reproduce desde NPY originales; no depende del caché.
 
@@ -273,7 +273,7 @@ Estos comandos no extraen1125, entrenan cabezas ni infieren test. Evidencia oper
 La solicitud directa del20 nov permite `rgb-budget-reserve --retry-of <ID_original>` una sola vez bajo el perfil `rgb-global-pilot-retry`. Exige original fallido y liquidado, selección/manifiesto idénticos y liga su recibo; claim vuelve a verificar el padre. Sin indicador sigue vigente el único intento original. No permite usar como padre el propio reintento ni un original completado. Nuevo productor/snapshot y salida; pipeline y dependencias conservan los hashes originales. Este control de presupuesto no concede por sí mismo autorización humana para usarlo: en este ítem existe la solicitud explícita registrada en00.
 
 
-## 16. E07/E08 · caché completo y cabeza
+## 16. E07/E08 - caché completo y cabeza
 
 El caché externo `full1125` contiene1125×16×384float32 y registros ordenados por manifest train; un consumidor de cabeza exige esa cobertura, hash y fuente, nunca `pilot30`. Se mantiene la identidad científica deR4. Se propone filtrar índices únicos con FFmpeg antes de transportar RGB24, conservando conteoN, decodificación íntegra, índices repetidos y letterboxPillow. La [documentación oficial de select](https://ffmpeg.org/ffmpeg-filters.html#select_002c-aselect), consultada20nov2026, define `n` desde0; compatibilidad efectiva4.4.2 y equivalencia se verifican localmente con casos sintéticos y SHA de píxeles30históricos. Si falla, conservar decoder anterior.
 
@@ -293,3 +293,19 @@ Se mantiene18060s comprometidos indefinidamente con duración real desconocida; 
 La corrección local posterior protege individualmente las operaciones de limpieza y conserva error inicial y errores de cleanup separados; intenta persistir el recibo aunque fallen espera/terminación/consultaGPU. Lock y señales se finalizan incluso ante error de escritura. La imposibilidad de confirmar terminación queda explícita y bloquea operacionalmente nuevas ejecuciones hasta verificar ausencia. No garantiza persistencia ante caída delhost/disco. El snapshot ejecutado permanece inmutable; el arreglo tiene huella posterior distinta y no reetiqueta modelos/caché. PruebasCPU y revisión focal conformes, sin reintentoGPU.
 
 Corrección posterior verificada:32pruebasCPU87,77s, cinco focales3,88s y dos escenarios independientesCPU conformes. Snapshot posterior separado del ejecutado, con cambios únicamente en supervisor y prueba. Límites: errores de cierre dellock/restauración de señales posteriores a persistencia pueden no quedar grabados; si `worker_termination_confirmed:false`, la pared del supervisor no acredita duración total del trabajador y no basta para liquidación medida automática. No se recuperó la medición histórica ni se ejecutó otro intento.
+
+## 17. Implementación actual y rutas de reproducción
+
+El candidato actual es `v4_contact_bimanual`, bundle `bundle_iter4_v1`: landmarks Holistic, transformaciones por clip, rasgos de geometría y movimiento, compuerta de reposo, contacto y bimanualidad; promedio de tres MLP entrenados con semillas 17/29/43. No depende del encoder RGB provisional. La selección y los límites de evaluación pertenecen a [07](07_results_and_publication_protocol.md#lectura-rápida-del-resultado-actual).
+
+| Recorrido implementado | Entrada y salida | Punto de entrada |
+|---|---|---|
+| Reproducción del experimento | Train y bundle autorizado → LOSO, refit y comparación de pesos; test opcional y explícito | [Notebook](../notebooks/01_entrenamiento_inferencia.ipynb). |
+| Refit final | Train y manifiesto → bundle con hashes | `python -m lsc5.cli iter3-finalfit --candidate v4_contact_bimanual --data-root data/train --manifest RUTA_MANIFEST --out RUTA_NUEVA`. |
+| Inferencia fija | Landmarks por muestra y plantilla → CSV validado | `python -m lsc5.cli wave-predict-csv --bundle RUTA_BUNDLE --landmarks-dir RUTA_LANDMARKS --template RUTA_PLANTILLA --out RUTA_CSV --bundle-kind iter3`; test requiere `--authorized-test-run` y autorización previa. |
+| Práctica con cámara | Video en navegador → landmarks enviados al servidor → predicción y corrección | [Demo, API y pasos locales](../demo/README.md). |
+| Inferencia sin PyTorch | Pesos exportados y landmarks → mismas operaciones MLP en NumPy | [Predictor NumPy](../demo/predictor_np.py) y [exportador](../demo/export_numpy.py). |
+
+Las rutas en mayúsculas son parámetros que debe proporcionar quien ejecuta; no son archivos distribuidos. Train, test, bundles y activos derivados permanecen fuera del repositorio público. La CLI, notebook y demo comparten el código de representación, pero sus interfaces de entrada son diferentes: la API además recibe timestamps y remuestrea el clip. La imagen Docker descarga activos privados al arrancar; no es autónoma con un clon público.
+
+La prueba del ZIP de entrega acredita reproducción local del modelo y CSV; la paridad NumPy acredita equivalencia en los clips comprobados. Ninguna sustituye una prueba de disponibilidad remota o de cámara en otro dispositivo. Contratos históricos de RGB/TCN y propuestas no ejecutadas permanecen en las secciones anteriores con sus resultados y límites propios.
